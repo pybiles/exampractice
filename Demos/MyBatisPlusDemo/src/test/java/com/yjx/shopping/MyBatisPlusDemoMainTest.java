@@ -1,5 +1,6 @@
 package com.yjx.shopping;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yjx.entity.User;
 import com.yjx.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
@@ -26,5 +27,16 @@ public class MyBatisPlusDemoMainTest {
         List<User> userList = userMapper.likeEmail("bao");
         System.out.println(userList);
     }
+    @Test
+    void testPlusMapper(){
+        User user = userMapper.selectById(3);
+        System.out.println(user);
 
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.like("email","bao");
+
+        List<User> users = userMapper.selectList(userQueryWrapper);
+        System.out.println(users);
+
+    }
 }

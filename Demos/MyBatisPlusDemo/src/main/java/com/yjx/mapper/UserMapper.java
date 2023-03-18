@@ -1,5 +1,6 @@
 package com.yjx.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yjx.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -7,7 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 @Mapper   //指定当前类是需要mybatis处理的mapper类
-public interface UserMapper {
+public interface UserMapper extends BaseMapper<User> {
 
     User getUserByName(String name);
 
