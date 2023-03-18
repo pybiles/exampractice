@@ -17,7 +17,7 @@ public class UserController {
     UserService userService;
 
 
-    @RequestMapping("/")
+    @RequestMapping("/allUsers")
     public List<User> allUser(){
         List<User> userList = userService.list();
         return userList;
