@@ -18,6 +18,9 @@
 
     <modules>
         <module>Demos/MyBatisPlusDemo</module>
+<!--        <module>Store/Front</module>-->
+<!--        <module>Store/Data</module>-->
+<!--        <module>Store/Service</module>-->
     </modules>
 
     <properties>
@@ -35,7 +38,17 @@
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>3.5.1</version>
             </dependency>
-
+            <!--逆向生成代码-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>3.5.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity-engine-core</artifactId>
+                <version>2.3</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
