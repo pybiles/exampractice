@@ -18,9 +18,9 @@
 
     <modules>
         <module>Demos/MyBatisPlusDemo</module>
-        <module>Store/Front</module>
-        <module>Store/DataAccessLayer</module>
-        <module>Store/ServiceLayer</module>
+<!--        <module>Store/Front</module>-->
+<!--        <module>Store/DataAccessLayer</module>-->
+<!--        <module>Store/ServiceLayer</module>-->
     </modules>
 
     <properties>
