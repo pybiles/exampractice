@@ -1,9 +1,15 @@
 package com.yjx.front.controller;
 
 
+import com.yjx.dal.entity.ProductType;
+import com.yjx.service.ProductTypeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -16,6 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/productType")
 public class ProductTypeController {
+    @Resource
+    ProductTypeService productTypeService;
+    @RequestMapping("/all")
+    public List<ProductType> all(){
+        return productTypeService.list();
+    }
 
 }
 

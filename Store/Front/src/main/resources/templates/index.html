@@ -22,8 +22,8 @@
             <div class="col-md-6">
                 <!--商品类型列表-->
                 <ol class="breadcrumb">
-                    <li >
-                        <a href="" >IT</a>
+                    <li v-for="productType in ProductTypeList">
+                        <a href="" v-text="productType.typeName" >IT</a>
                     </li>
                 </ol>
             </div>
@@ -50,6 +50,35 @@
     </div>
 
 </div>
+<script>
+
+    console.log("--------publicHeaderApp--------")
+
+    let publicHeaderApp = new Vue({
+        el:"#publicHeaderApp",
+        data:{
+            productTypeList:[]
+        },
+        methods:{
+            initProductTypeList(){
+
+                let vueObj = this;
+
+                $.get("/productType/all",function (data){
+                    console.log(data)
+                    vueObj.productTypeList = data;
+                })
+
+            }
+        },
+        created(){
+            this.initProductTypeList();
+        }
+    })
+
+
+
+</script>
 
 <div class="container-fluid" id="app" style="margin-top: 180px;margin-bottom: 100px">
 
