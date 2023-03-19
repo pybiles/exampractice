@@ -28,6 +28,11 @@ public class ProductController {
     public List<Product> topN(Integer n){
         return productService.topN(n);
     }
+    @RequestMapping("detail")
+    public Product detail(Integer productId){
+//       return productService.getById(productId);
+        return productService.seeDetail(productId);
+    }
 
 }
 

@@ -15,7 +15,7 @@ import lombok.Setter;
  * </p>
  *
  * @author yjx
- * @since 2023-03-18 06:59:29
+ * @since 2023-03-19 10:23:51
  */
 @Getter
 @Setter
@@ -45,12 +45,41 @@ public class Product {
      */
     @TableField("product_price")
     private BigDecimal productPrice;
+    /**
+     * 商品产地
+     */
+    @TableField("product_area")
+    private String productArea;
+
+    /**
+     * 商品简介
+     */
+    @TableField("detail")
+    private String detail;
 
     /**
      * 商品图片地址
      */
     @TableField("product_imgsrc")
     private String productImgsrc;
+
+    /**
+     * 阅读量
+     */
+    @TableField("read_count")
+    private Integer readCount;
+
+    /**
+     * 购买量
+     */
+    @TableField("buy_count")
+    private Integer buyCount;
+
+    /**
+     * 收藏量
+     */
+    @TableField("collect_count")
+    private Integer collectCount;
 
     /**
      * 创建时间

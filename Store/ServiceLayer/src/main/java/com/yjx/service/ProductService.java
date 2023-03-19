@@ -15,4 +15,5 @@ import java.util.List;
  */
 public interface ProductService extends IService<Product> {
     List<Product> topN(Integer n);
+    Product seeDetail(Integer productId);
 }

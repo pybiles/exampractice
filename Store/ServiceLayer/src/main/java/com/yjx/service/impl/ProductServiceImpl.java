@@ -37,4 +37,17 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
         return productList;
     }
+
+    @Override
+    public Product seeDetail(Integer productId) {
+        Product product = productMapper.selectById(productId);
+//阅读量+1
+        Product productUpdate = new Product();
+        productUpdate.setId(product.getId());
+        productUpdate.setReadCount(product.getReadCount()+1 );
+
+        productMapper.updateById(productUpdate);
+
+        return product;
+    }
 }

@@ -133,6 +133,15 @@
             seeDetail(productId){
                 console.log("去查看"+productId+"详情")
                 sessionStorage.setItem("toSeeDetailProductId",productId)
+                // sessionStorage.setItem()
+                // sessionStorage.getItem()
+                // sessionStorage.clear();
+                // sessionStorage  只在当前页面有效,页面一关闭数据就没了
+
+                // localStorage.setItem()
+                // localStorage.getItem()
+                // localStorage.clear()
+                // localStorage  简单的浏览器key-value存储库,一直存在
                 location.href="/singleProduct.html"
             }
         },

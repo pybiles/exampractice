@@ -87,15 +87,17 @@
     <div class="row">
         <div class="col-md-4">
             <div class="thumbnail">
-                <img src="" alt="...">
+                <img :src="productInfo.productImgsrc" alt="...">
             </div>
         </div>
         <div class= "col-md-8">
-            <p>商品名 : <span ></span></p>
+            <p>商品名 : <span v-text="productInfo.productName"></span></p>
             <br/>
-            <p>商品种类 : <span  ></span></p>
+            <p>商品产地 : <span  v-text="productInfo.productArea"></span></p>
             <br/>
-            <p>商品价格 : <span  ></span></p>
+            <p>商品价格 : <span v-text="productInfo.productPrice" ></span></p>
+            <br/>
+            <p>商品简介: <span  v-text="productInfo.detail"></span></p>
             <br/>
             <br/>
             <br/>
@@ -112,17 +114,33 @@
     let app = new Vue({
         el:"#app",
         data:{
+            productId:-1,
+            productInfo:{}
 
         },
         methods:{
+            initProductInfo(){
 
+                let vueObj = this;
+
+                $.post("/product/detail",{productId:this.productId},function (data) {
+                    console.log(data)
+                    vueObj.productInfo = data;
+                })
+
+            }
         },
         created(){
+            let productId = sessionStorage.getItem("toSeeDetailProductId");
+            console.log(productId)
+            this.productId = productId;
 
+            this.initProductInfo();
         }
     })
 
 </script>
+
 
 
 <div class="navbar navbar-default navbar-fixed-bottom" id="publicfooterApp">
