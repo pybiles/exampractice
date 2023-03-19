@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>分类查看</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+
+
+<!--使用抽取的公共头部-->
+<div th:insert="publicHeader.html"></div>
+<script th:src="@{/publicHeader.js}"></script>
+
+
+
+<div class="container-fluid" id="app" style="margin-top: 180px;margin-bottom: 100px">
+
+  <div class="container col-md-12">
+    <h3 style="text-align: center">暂无 xx 类商品</h3>
+  </div>
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-12">
+        <p style="background-color: cornflowerblue ; color: white; font-size: 30px"> xx 类图书</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6 col-md-4" >
+        <div class="thumbnail">
+          <img src="/1.jpg" alt="..." class="col-sm-6 col-md-6" style="width: 140px;height: 130px">
+          <div class="caption text-left">
+            <p>商品名:<span >name</span></p>
+            <p>价格:<span >price</span></p>
+            <p>热销量:<span >buycount</span></p>
+            <p>
+              <a class="btn btn-primary" >详情</a> &nbsp;&nbsp;&nbsp;&nbsp;
+              <a class="btn btn-success" >加入购物车</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 col-md-offset-5 col-lg-offset-4col-xl-offset-5" >
+        <ul class="pagination justify-content-center">
+          <li><a href="" >上一页</a></li>
+          <li><a href="" >n</a></li>
+          <li><a href="" >下一页</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+<script>
+
+  console.log("------productsOfType-----")
+
+  let app = new Vue({
+    el:"#app",
+    data:{
+
+
+    },
+    methods:{
+
+    },
+    created(){
+      let productTypeId = sessionStorage.getItem("seeProductsOfType");
+      console.log(productTypeId)
+
+
+    }
+  })
+
+</script>
+
+
+<div th:insert="publicFooter.html"></div>
+
+
+</body>
+</html>

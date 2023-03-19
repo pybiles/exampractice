@@ -14,7 +14,11 @@ let publicHeaderApp = new Vue({
                 console.log(data)
                 vueObj.productTypeList = data;
             })
-
+        }
+        ,
+        seeProductsOfType(productTypeId){
+            sessionStorage.setItem("seeProductsOfType",productTypeId)
+            location.href = "/productsOfType.html"
         }
     },
     created(){
