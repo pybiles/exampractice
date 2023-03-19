@@ -26,6 +26,9 @@ public class ProductTypeController {
     public List<ProductType> all(){
         return productTypeService.list();
     }
-
+    @RequestMapping("detail")
+    public ProductType detail(Integer productTypeId){
+        return productTypeService.getById(productTypeId);
+    }
 }
 
