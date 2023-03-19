@@ -1,6 +1,7 @@
 package com.yjx.front.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yjx.dal.entity.Product;
 import com.yjx.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,13 @@ public class ProductController {
     public Product detail(Integer productId){
 //       return productService.getById(productId);
         return productService.seeDetail(productId);
+    }
+    @RequestMapping("pageByType")
+    public Page<Product> pageByType(Integer currentPage, Integer pageSize, Integer typeId){
+
+        Page<Product> productPage = productService.pageByType(currentPage, pageSize, typeId);
+
+        return productPage;
     }
 
 }

@@ -30,7 +30,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         Page<Product> page = new Page<>(1, n);
 
         QueryWrapper<Product> productQueryWrapper = new QueryWrapper<>();
-        productQueryWrapper.orderByDesc("product_price");
+        productQueryWrapper.orderByDesc("buy_count");
 
         Page<Product> productPageResult = productMapper.selectPage(page, productQueryWrapper);
         List<Product> productList = productPageResult.getRecords();
@@ -49,5 +49,19 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         productMapper.updateById(productUpdate);
 
         return product;
+    }
+
+    @Override
+    public Page<Product> pageByType(Integer currentPage, Integer pageSize, Integer typeId) {
+        //分页查询条件
+        Page<Product> page = new Page<>(currentPage,pageSize);
+
+        QueryWrapper<Product> productQueryWrapper = new QueryWrapper<>();
+        productQueryWrapper.eq("product_type_id",typeId);
+        productQueryWrapper.orderByDesc("buy_count");
+
+        Page<Product> productPageResult = productMapper.selectPage(page, productQueryWrapper);
+
+        return productPageResult;
     }
 }

@@ -18,86 +18,125 @@
 
 <div class="container-fluid" id="app" style="margin-top: 180px;margin-bottom: 100px">
 
-    <div class="container col-md-12">
+    <div class="container col-md-12" v-if="pageData.total<1">
         <h3 style="text-align: center">暂无 {{productTypeInfo.typeName}} 类商品</h3>
     </div>
 
-    <div class="container">
+    <div class="container" v-if="pageData.total>0">
 
         <div class="row">
             <div class="col-md-12">
-                <p style="background-color: cornflowerblue ; color: white; font-size: 30px"> {{productTypeInfo.typeName}}
-                    类商品</p>
+                <p style="background-color: cornflowerblue ; color: white; font-size: 30px" align="center">
+                    {{productTypeInfo.typeName}} 类商品</p>
             </div>
         </div>
-
         <div class="row">
-            <div class="col-sm-6 col-md-4">
-                <div class="thumbnail">
-                    <img src="/1.jpg" alt="..." class="col-sm-6 col-md-6" style="width: 140px;height: 130px">
-                    <div class="caption text-left">
-                        <p>商品名:<span>name</span></p>
-                        <p>价格:<span>price</span></p>
-                        <p>热销量:<span>buycount</span></p>
-                        <p>
-                            <a class="btn btn-primary">详情</a> &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a class="btn btn-success">加入购物车</a>
-                        </p>
+            <div class="col-sm-6 col-md-4" v-for="product in pageData.records">
+                <div class="col-sm-6 col-md-4">
+                    <div class="thumbnail">
+                        <img :src="product.productImgsrc" alt="..." class="col-sm-6 col-md-6"
+                             style="width: 140px;height: 130px">
+                        <div class="caption text-left">
+                            <p>商品名:<span v-text="product.productName">name</span></p>
+                            <p>价格:<span v-text="product.productPrice">price</span></p>
+                            <p>热销量:<span v-text="product.buyCount">buycount</span></p>
+                            <p>
+                                <a class="btn btn-primary" @click.prevent="seeDetail(product.id)">详情</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                                <a class="btn btn-success">加入购物车</a>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12 col-md-offset-5 col-lg-offset-4col-xl-offset-5">
+                    <ul class="pagination justify-content-center">
+                        <li><a href="" @click.prevent="goPage(pageData.current-1)">上一页</a></li>
+                        <li><a href="" v-for="num in pageData.pages" v-text="num" @click.prevent="goPage(num)">n</a>
+                        </li>
+                        <li><a href="" @click.prevent="goPage(pageData.current+1)">下一页</a></li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
 
-        <div class="row">
-            <div class="col-md-12 col-md-offset-5 col-lg-offset-4col-xl-offset-5">
-                <ul class="pagination justify-content-center">
-                    <li><a href="">上一页</a></li>
-                    <li><a href="">n</a></li>
-                    <li><a href="">下一页</a></li>
-                </ul>
-            </div>
-        </div>
 
     </div>
 
+    <script>
+
+        console.log("------productsOfType-----")
+
+        let app = new Vue({
+            el: "#app",
+            data: {
+                productTypeId: -1,
+                productTypeInfo: {},
+                pageData: {
+                    current: 1,
+                    size: 3,
+                    total: -1,
+                    records: [],
+                    pages: -1
+                }
+            },
+            methods: {
+                initProductTypeInfo() {
+                    let vueObj = this;
+                    $.get("/productType/detail", {productTypeId: this.productTypeId}, function (data) {
+                        console.log(data)
+                        vueObj.productTypeInfo = data;
+                    })
+                }
+                ,
+                initPageData() {
+                    let vueObj = this;
+                    let params = {
+                        currentPage: this.pageData.current,
+                        pageSize: this.pageData.size,
+                        typeId: this.productTypeId
+                    }
+                    $.post("/product/pageByType", params, function (data) {
+                        console.log(data)
+                        vueObj.pageData = data;
+                    })
+                }
+                ,
+                seeDetail(productId) {
+                    console.log("去查看" + productId + "详情")
+                    sessionStorage.setItem("toSeeDetailProductId", productId)
+                    location.href = "/singleProduct.html"
+                }
+                ,
+                goPage(pageNum) {
+                    if (pageNum < 1 || pageNum > this.pageData.pages || pageNum == this.pageData.current) {
+                        console.log("无效pageNum " + pageNum);
+                        return
+                    }
+
+                    this.pageData.current = pageNum;
+                    this.initPageData();
+                }
+            },
+            created() {
+                let productTypeId = sessionStorage.getItem("seeProductsOfType");
+                console.log(productTypeId)
+
+                this.productTypeId = productTypeId;
+
+                this.initProductTypeInfo();
+
+                this.initPageData();
+            }
+        })
+
+    </script>
+
+
+    <div th:insert="publicFooter.html"></div>
 
 </div>
-
-<script>
-
-    console.log("------productsOfType-----")
-
-    let app = new Vue({
-        el: "#app",
-        data: {
-            productTypeId: -1,
-            productTypeInfo: {}
-
-        },
-        methods: {
-            initProductTypeInfo() {
-                let vueObj = this;
-                $.get("/productType/detail", {productTypeId: this.productTypeId}, function (data) {
-                    console.log(data)
-                    vueObj.productTypeInfo = data;
-                })
-            }
-        },
-        created() {
-            let productTypeId = sessionStorage.getItem("seeProductsOfType");
-            console.log(productTypeId)
-
-            this.productTypeId = productTypeId;
-
-            this.initProductTypeInfo();
-        }
-    })
-
-</script>
-
-
-<div th:insert="publicFooter.html"></div>
-
-
 </body>
 </html>

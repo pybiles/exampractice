@@ -1,5 +1,6 @@
 package com.yjx.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yjx.dal.entity.Product;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,4 +17,5 @@ import java.util.List;
 public interface ProductService extends IService<Product> {
     List<Product> topN(Integer n);
     Product seeDetail(Integer productId);
+    Page<Product> pageByType(Integer currentPage, Integer pageSize, Integer typeId);
 }
