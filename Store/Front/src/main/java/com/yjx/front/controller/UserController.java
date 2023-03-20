@@ -67,7 +67,13 @@ public class UserController {
         String code = "0000";
 
         //发送邮件
-        sendEmail(email, "您的蜗牛书店注册验证码", "您的验证码为 " + code + " ,有效期为5分钟,请尽快使用");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sendEmail(email, "您的注册验证码", "您的验证码为 " + code + " ,有效期为5分钟,请尽快使用");
+            }
+        }).start();
+
 
         //保存到redis中,有效期5分钟
         stringRedisTemplate.opsForValue().set(email, code, 5, TimeUnit.MINUTES);
@@ -81,6 +87,12 @@ public class UserController {
         message.setTo(toEmail);
         message.setSubject(subject);
         message.setText(text);
+
+        try {
+            TimeUnit.SECONDS.sleep(30);  //模拟邮箱服务器高延时
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         javaMailSender.send(message);
     }
@@ -113,19 +125,28 @@ public class UserController {
             newUser.setEmail(email);
 
             //        Thread.sleep(5000);
-            try {
-                System.out.println(Thread.currentThread().getName() + " 用户名 " + username + " 唯一校验通过,准备写入用户信息,模拟比较耗时的情况");
-                TimeUnit.SECONDS.sleep(10);
-
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+//            try {
+//                System.out.println(Thread.currentThread().getName() + " 用户名 " + username + " 唯一校验通过,准备写入用户信息,模拟比较耗时的情况");
+//                TimeUnit.SECONDS.sleep(10);
+//
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
             userService.save(newUser);
         }
 
         System.out.println(Thread.currentThread().getName() + " 用户名 " + username + " 注册成功");
         //发送欢迎邮件
-        sendEmail(email, "Welcome to Our Animals", "Have a good travel!");
+//        sendEmail(email, "Welcome to Our Animals", "Have a good travel!");
+        //异步发送邮件
+
+        //方案一:用多线程实现
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sendEmail(email, "Welcome to Our Animals", "Have a good travel!");
+            }
+        }).start();
         return "ok";
     }
 
