@@ -1,14 +1,19 @@
 package com.yjx.front.controller;
 
 
+import com.yjx.dal.entity.User;
+import com.yjx.dal.mapper.UserMapper;
+import com.yjx.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,6 +32,8 @@ public class UserController {
 
     @Autowired
     StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    UserService userService;
 
     @RequestMapping("getEmailCode")
     public String getEmailCode(String email){
@@ -59,7 +66,38 @@ public class UserController {
         return "ok";
     }
 
+    @RequestMapping("register")
+    public String register(String username, String password, String repass, String email, String emailCode){
 
+        //校验邮箱验证码
+        if(StringUtils.isEmpty(email) || StringUtils.isEmpty(emailCode) ||  !emailCode.equalsIgnoreCase(stringRedisTemplate.opsForValue().get(email))){
+            return "邮箱或邮箱验证码错误";
+        }
+
+        //校验密码
+        if(StringUtils.isEmpty(password) || StringUtils.isEmpty(repass) || !password.equals(repass)){
+            return "两次输入密码有误";
+        }
+
+        //用户名需要保证唯一性
+        //方案1: 数据库里设置username列唯一索引
+        //方案2: 程序里先检查该用户是否存在,如果已经已经就拒绝注册
+
+        User userByAccount = userService.getUserByUsername(username);
+        if (StringUtils.isEmpty(username) || userByAccount!=null){
+            return "用户名已被占用";
+        }
+
+        //写入用户
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+        newUser.setEmail(email);
+
+        userService.save(newUser);
+
+        return "ok";
+    }
 
 }
 
