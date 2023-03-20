@@ -3,6 +3,7 @@ package com.yjx;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -89,6 +90,32 @@ public class RedisDemoMainTest {
         User user = (User)opsForValue.get("user");
         System.out.println(user.getName());
         System.out.println(user.getAge());
+    }
+    @Autowired
+    RedisTemplate<String,Object> stringObjectRedisTemplate;
+
+    @Test
+    void testStringObjectRedisTemplate(){
+
+        ValueOperations<String, Object> opsForValue = stringObjectRedisTemplate.opsForValue();
+
+        opsForValue.set("User2",new User2("小红",18));
+
+        User2 user2 = (User2) opsForValue.get("User2");
+        System.out.println(user2);
+
+
+        HashOperations<String, Object, Object> opsForHash = stringObjectRedisTemplate.opsForHash();
+        opsForHash.put("悟空","花果山","猴大王");
+        opsForHash.put("悟空","天庭","弼马温");
+        opsForHash.put("悟空","五指山","泼猴");
+
+        System.out.println( opsForHash.get("悟空","天庭") );
+        System.out.println( opsForHash.get("悟空","五指山") );
+
+        // stringObjectRedisTemplate.delete("悟空");
+        opsForHash.delete("悟空","花果山");
+
     }
 
 }
