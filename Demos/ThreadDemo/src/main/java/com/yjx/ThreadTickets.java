@@ -11,7 +11,7 @@ public class ThreadTickets {
         while (totalTicket>0){
             System.out.println(Thread.currentThread().getName() + " 售出第 "+totalTicket + "张票");
             try {
-                Thread.sleep(200);
+                Thread.sleep(20);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -26,7 +26,11 @@ public class ThreadTickets {
         Thread threadA = new Thread(new Runnable() {
             @Override
             public void run() {
-                saleTicket();
+                while (totalTicket>0){
+                    synchronized (ThreadTickets.class){  //同步锁
+                        saleTicket();
+                    }
+                }
             }
         },"threadA");
 
@@ -34,7 +38,11 @@ public class ThreadTickets {
         Thread threadB = new Thread(new Runnable() {
             @Override
             public void run() {
-                saleTicket();
+                while (totalTicket>0){
+                    synchronized (ThreadTickets.class){  //同步锁
+                        saleTicket();
+                    }
+                }
             }
         },"threadB");
 
