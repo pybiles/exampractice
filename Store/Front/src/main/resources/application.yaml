@@ -34,7 +34,12 @@ spring:
         smtp:
           socketFactory:
             class: javax.net.ssl.SSLSocketFactory
-
+  #RabbitMQ实现邮件异步传输 配置
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
 #mybatis—plus与spring是并列的关系
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml

@@ -6,6 +6,7 @@ import com.yjx.service.UserService;
 import com.yjx.service.util.JwtUtil;
 import com.yjx.service.util.Md5Util;
 import com.yjx.service.util.UserTokenUtil;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
@@ -21,9 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -47,6 +46,8 @@ public class UserController {
     UserService userService;
     @Autowired
     Producer producer;
+    @Autowired
+    RabbitTemplate rabbitTemplate;
 
     @RequestMapping("getEmailCode")
     public String getEmailCode(String email) {
@@ -139,15 +140,16 @@ public class UserController {
         //发送欢迎邮件
 //        sendEmail(email, "Welcome to Our Animals", "Have a good travel!");
         //异步发送邮件
-
-        //方案一:用多线程实现
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                sendEmail(email, "Welcome to Our Animals", "Have a good travel!");
-            }
-        }).start();
+        //方案二: 使用MQ实现
+        //发送需求
+        Map<String,String> infoMap = new HashMap<>();
+        infoMap.put("email",email);
+        infoMap.put("subject","Welcome to Our Animals");
+        infoMap.put("text","Have a good travel!");
+        // 交换机”“ 消息队列 test_send_email 要发送的消息 infoMap
+        rabbitTemplate.convertAndSend("","test_send_email",infoMap);
         return "ok";
+
     }
 
     @RequestMapping("kaptchaCode")
