@@ -4,6 +4,7 @@ package com.yjx.front.controller;
 import com.yjx.dal.entity.User;
 import com.yjx.dal.mapper.UserMapper;
 import com.yjx.service.UserService;
+import com.yjx.service.util.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
@@ -91,7 +92,7 @@ public class UserController {
         //写入用户
         User newUser = new User();
         newUser.setUsername(username);
-        newUser.setPassword(password);
+        newUser.setPassword(Md5Util.encode(password));
         newUser.setEmail(email);
 
         userService.save(newUser);
