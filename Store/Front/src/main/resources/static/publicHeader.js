@@ -3,7 +3,8 @@ console.log("--------publicHeaderApp--------")
 let publicHeaderApp = new Vue({
     el:"#publicHeaderApp",
     data:{
-        productTypeList:[]
+        productTypeList:[],
+        currentUserUsername:''
     },
     methods:{
         initproductTypeList(){
@@ -20,8 +21,17 @@ let publicHeaderApp = new Vue({
             sessionStorage.setItem("seeProductsOfType",productTypeId)
             location.href = "/productsOfType.html"
         }
+        ,
+        initCurrentUserUsername(){
+            let vueObj = this;
+            $.post("/user/getCurrentUserUsername",function (data) {
+                console.log("当前用户名 "+data)
+                vueObj.currentUserUsername = data;
+            })
+        }
     },
     created(){
         this.initproductTypeList();
+        this.initCurrentUserUsername();
     }
 })

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -112,9 +113,12 @@ public class UserController {
         return "ok";
     }
     @RequestMapping("kaptchaCode")
-    public void kaptchaCode(HttpServletResponse response) throws IOException {
+    public void kaptchaCode(HttpServletResponse response, HttpServletRequest request) throws IOException {
         //1.生成验证码字符串
         String kaptchaCode  = producer.createText();
+
+        //保存验证码到session中
+        request.getSession().setAttribute("kaptchaCode",kaptchaCode);
 
         //2.字符串转为图片
         BufferedImage image = producer.createImage(kaptchaCode);
@@ -122,6 +126,40 @@ public class UserController {
         response.setContentType("image/jpeg");
         ImageIO.write(image,"jpg",response.getOutputStream());
 
+    }
+
+    @RequestMapping("login")
+    public String login(String username,String password,String code,HttpServletRequest request){
+
+        String kaptchaCode = (String)request.getSession().getAttribute("kaptchaCode");
+        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(kaptchaCode) || !code.equalsIgnoreCase(kaptchaCode)){
+            return "验证码错误";
+        }
+
+        User userByUsername = userService.getUserByUsername(username);
+        if (userByUsername==null){
+//            return "用户名错误";
+            return "用户名或密码错误";
+        }
+
+        if (!userByUsername.getPassword().equalsIgnoreCase(Md5Util.encode(password))){
+            return "用户名或密码错误";
+        }
+        //保存当前用户信息到session中
+        request.getSession().setAttribute("currentUserUsername",userByUsername.getUsername());
+        return "ok";
+    }
+
+    //获取当前用户信息
+    @RequestMapping("getCurrentUserUsername")
+    public String getCurrentUserAccount(HttpServletRequest request){
+
+        String currentUserUsername = (String) request.getSession().getAttribute("currentUserUsername");
+        if (StringUtils.isEmpty(currentUserUsername)){
+            currentUserUsername = "";
+        }
+
+        return currentUserUsername;
     }
 
 }
