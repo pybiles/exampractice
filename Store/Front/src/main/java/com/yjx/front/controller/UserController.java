@@ -161,6 +161,12 @@ public class UserController {
 
         return currentUserUsername;
     }
+    @RequestMapping("logout")
+    public String logout(HttpServletRequest request){
+        request.getSession().removeAttribute("currentUserUsername");
+
+        return "ok";
+    }
 
 }
 

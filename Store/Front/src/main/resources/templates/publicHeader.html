@@ -35,7 +35,7 @@
                 <span  v-if="currentUserUsername" >欢迎您: {{currentUserUsername}}</span>
                 <a v-if="currentUserUsername" class="btn btn-default btn-sm" href="">我的购物车</a>
                 <a v-if="currentUserUsername" class="btn btn-default btn-sm" href="">我的订单</a>
-                <a v-if="currentUserUsername" class="btn btn-default btn-sm" href="">退出</a>
+                <a v-if="currentUserUsername" @click.prevent="toLogout" class="btn btn-default btn-sm" href="">退出</a>
             </div>
 
         </div>

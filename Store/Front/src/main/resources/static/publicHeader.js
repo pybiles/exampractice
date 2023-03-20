@@ -29,6 +29,12 @@ let publicHeaderApp = new Vue({
                 vueObj.currentUserUsername = data;
             })
         }
+        ,
+        toLogout(){
+            $.post("/user/logout",function (data) {
+                location.href="/"
+            })
+        }
     },
     created(){
         this.initproductTypeList();
