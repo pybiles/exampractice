@@ -3,6 +3,7 @@ package com.yjx.front.controller;
 import com.google.code.kaptcha.Producer;
 import com.yjx.dal.entity.User;
 import com.yjx.service.UserService;
+import com.yjx.service.util.JwtUtil;
 import com.yjx.service.util.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -14,12 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -112,59 +117,83 @@ public class UserController {
         sendEmail(email, "Welcome to Our Animals", "Have a good travel!");
         return "ok";
     }
+
     @RequestMapping("kaptchaCode")
     public void kaptchaCode(HttpServletResponse response, HttpServletRequest request) throws IOException {
         //1.生成验证码字符串
-        String kaptchaCode  = producer.createText();
+        String kaptchaCode = producer.createText();
 
         //保存验证码到session中
-        request.getSession().setAttribute("kaptchaCode",kaptchaCode);
+        request.getSession().setAttribute("kaptchaCode", kaptchaCode);
 
         //2.字符串转为图片
         BufferedImage image = producer.createImage(kaptchaCode);
 
         response.setContentType("image/jpeg");
-        ImageIO.write(image,"jpg",response.getOutputStream());
+        ImageIO.write(image, "jpg", response.getOutputStream());
 
     }
 
     @RequestMapping("login")
-    public String login(String username,String password,String code,HttpServletRequest request){
+    public String login(String username, String password, String code, HttpServletRequest request, HttpServletResponse response) {
 
-        String kaptchaCode = (String)request.getSession().getAttribute("kaptchaCode");
-        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(kaptchaCode) || !code.equalsIgnoreCase(kaptchaCode)){
+        String kaptchaCode = (String) request.getSession().getAttribute("kaptchaCode");
+        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(kaptchaCode) || !code.equalsIgnoreCase(kaptchaCode)) {
             return "验证码错误";
         }
 
         User userByUsername = userService.getUserByUsername(username);
-        if (userByUsername==null){
+        if (userByUsername == null) {
 //            return "用户名错误";
             return "用户名或密码错误";
         }
 
-        if (!userByUsername.getPassword().equalsIgnoreCase(Md5Util.encode(password))){
+        if (!userByUsername.getPassword().equalsIgnoreCase(Md5Util.encode(password))) {
             return "用户名或密码错误";
         }
         //保存当前用户信息到session中
-        request.getSession().setAttribute("currentUserUsername",userByUsername.getUsername());
+//        request.getSession().setAttribute("currentUserUsername",userByUsername.getUsername());
+        //生成jwtToken,并放到Cookie中去
+        String token = JwtUtil.createTokenSingleInfo(20, "username", userByUsername.getUsername());
+        Cookie cookie = new Cookie("user_token", token);
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return "ok";
     }
 
     //获取当前用户信息
     @RequestMapping("getCurrentUserUsername")
-    public String getCurrentUserAccount(HttpServletRequest request){
+    public String getCurrentUserAccount(HttpServletRequest request) {
 
-        String currentUserUsername = (String) request.getSession().getAttribute("currentUserUsername");
-        if (StringUtils.isEmpty(currentUserUsername)){
-            currentUserUsername = "";
+//        String currentUserUsername = (String) request.getSession().getAttribute("currentUserUsername");
+//        if (StringUtils.isEmpty(currentUserUsername)){
+//            currentUserUsername = "";
+//        }
+        String currentUserUsername = "";
+
+        //先尝试拿到目标cookie
+        List<Cookie> cookieList = Arrays.stream(request.getCookies()).filter(cookie -> {
+            return cookie.getName().equals("user_token");
+        }).collect(Collectors.toList());
+
+        //再尝试从cookie中解析出用户名
+        if (cookieList.size() == 1) {
+            currentUserUsername = JwtUtil.parseValueWithoutException(cookieList.get(0).getValue(), "username");
         }
+
 
         return currentUserUsername;
     }
-    @RequestMapping("logout")
-    public String logout(HttpServletRequest request){
-        request.getSession().removeAttribute("currentUserUsername");
 
+    @RequestMapping("logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+
+//        request.getSession().removeAttribute("currentUserUsername");
+
+        Cookie cookie = new Cookie("user_token", "xxx");
+        cookie.setMaxAge(0); //cookie有效期设置为0,等效于删除
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return "ok";
     }
 
