@@ -97,23 +97,33 @@ public class UserController {
         if (StringUtils.isEmpty(password) || StringUtils.isEmpty(repass) || !password.equals(repass)) {
             return "两次输入密码有误";
         }
+        synchronized (username.intern()) { //用户名需要保证唯一性
+            //方案1: 数据库里设置username列唯一索引
+            //方案2: 程序里先检查该用户是否存在,如果已经已经就拒绝注册
 
-        //用户名需要保证唯一性
-        //方案1: 数据库里设置username列唯一索引
-        //方案2: 程序里先检查该用户是否存在,如果已经已经就拒绝注册
+            User userByAccount = userService.getUserByUsername(username);
+            if (StringUtils.isEmpty(username) || userByAccount != null) {
+                return "用户名已被占用";
+            }
 
-        User userByAccount = userService.getUserByUsername(username);
-        if (StringUtils.isEmpty(username) || userByAccount != null) {
-            return "用户名已被占用";
+            //写入用户
+            User newUser = new User();
+            newUser.setUsername(username);
+            newUser.setPassword(Md5Util.encode(password));
+            newUser.setEmail(email);
+
+            //        Thread.sleep(5000);
+            try {
+                System.out.println(Thread.currentThread().getName() + " 用户名 " + username + " 唯一校验通过,准备写入用户信息,模拟比较耗时的情况");
+                TimeUnit.SECONDS.sleep(10);
+
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            userService.save(newUser);
         }
 
-        //写入用户
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setPassword(Md5Util.encode(password));
-        newUser.setEmail(email);
-
-        userService.save(newUser);
+        System.out.println(Thread.currentThread().getName() + " 用户名 " + username + " 注册成功");
         //发送欢迎邮件
         sendEmail(email, "Welcome to Our Animals", "Have a good travel!");
         return "ok";
@@ -152,7 +162,7 @@ public class UserController {
         if (!userByUsername.getPassword().equalsIgnoreCase(Md5Util.encode(password))) {
             return "用户名或密码错误";
         }
-        UserTokenUtil.createUserToken(userByUsername.getUsername(),response,stringRedisTemplate);
+        UserTokenUtil.createUserToken(userByUsername.getUsername(), response, stringRedisTemplate);
         return "ok";
     }
 
@@ -168,7 +178,7 @@ public class UserController {
     @RequestMapping("logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
 
-        UserTokenUtil.deleteUserToken(response,request,stringRedisTemplate);
+        UserTokenUtil.deleteUserToken(response, request, stringRedisTemplate);
         return "ok";
     }
 
