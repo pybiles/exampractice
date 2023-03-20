@@ -22,6 +22,7 @@
         <module>Store/ServiceLayer</module>
         <module>Store/Front</module>
         <module>Demos/CacheDemo</module>
+        <module>Demos/RedisDemo</module>
     </modules>
 
     <properties>
