@@ -9,8 +9,9 @@ public class SimpleConsumer {
 
     //消费者,监听 simple_queue 队列
     @RabbitListener(queues = "simple_queue")
-    public void onMsg(Message message){
+    public void onMsg(Message message,String msg){
         System.out.println(message);
+        System.out.println(msg);
     }
 
 
