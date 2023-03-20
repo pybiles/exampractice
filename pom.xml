@@ -23,6 +23,7 @@
         <module>Store/Front</module>
         <module>Demos/CacheDemo</module>
         <module>Demos/RedisDemo</module>
+        <module>Demos/ThreadDemo</module>
     </modules>
 
     <properties>
