@@ -1,6 +1,6 @@
 package com.yjx;
 
-public class ThreadDemo1 {
+public class ThreadDemo {
 
 
     public static void main(String[] args) {
