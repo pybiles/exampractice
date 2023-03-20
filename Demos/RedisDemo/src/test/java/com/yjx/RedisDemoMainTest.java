@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
@@ -59,5 +60,35 @@ public class RedisDemoMainTest {
         System.out.println(deleteResult);
     }
 
+    @Test
+    void testRedisTemplateObject(){
+
+        ValueOperations<Object, Object> opsForValue = redisTemplate.opsForValue();//操作value是字符串的
+
+//        //将对象转换为可以存储一堆二进制数据的过程称之为序列化
+        opsForValue.set("currentDate",new Date());
+
+        //将一堆二进制数据读取出来,还原成Java对象  这个过程称之为 反序列化
+        Object objectFromRedis = opsForValue.get("currentDate");
+
+        Date dateFromRedis = (Date) objectFromRedis;
+        System.out.println(dateFromRedis.getTime() );
+
+
+    }
+
+
+    @Test
+    void testRedisTemplateObjectCustomObject(){
+
+        ValueOperations<Object, Object> opsForValue = redisTemplate.opsForValue();//操作value是字符串的
+
+        //JDK的默认序列化需要对象必须实现了 java.io.Serializable 接口
+        opsForValue.set("user",new User("赵春阳",66));
+
+        User user = (User)opsForValue.get("user");
+        System.out.println(user.getName());
+        System.out.println(user.getAge());
+    }
 
 }
