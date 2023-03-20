@@ -3,6 +3,7 @@ package com.yjx;
 import com.yjx.service.ProductService;
 import com.yjx.service.ProductTypeService;
 import com.yjx.service.UserService;
+import com.yjx.service.util.JwtUtil;
 import io.jsonwebtoken.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
 
 @SpringBootTest
 public class FrontMainTests {
@@ -85,4 +87,20 @@ public class FrontMainTests {
         System.out.println( body.get("age") );
 
     }
+    @Test
+    void testJwtUtil(){
+
+        HashMap<String, Object> infoMap = new HashMap<>();
+        infoMap.put("name","woniu");
+        infoMap.put("address","panshi");
+
+        String token = JwtUtil.createToken(15, infoMap);
+        System.out.println(token);
+
+        System.out.println( JwtUtil.parseValue(token,"name") );
+        System.out.println( JwtUtil.parseValue(token,"address") );
+        System.out.println( JwtUtil.parseValue(token,"xxxxx") );
+
+    }
+
 }
