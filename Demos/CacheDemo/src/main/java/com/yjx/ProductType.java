@@ -1,4 +1,4 @@
-package com.yjx.dal.entity;
+package com.yjx;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Getter;

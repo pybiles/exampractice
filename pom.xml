@@ -21,6 +21,7 @@
         <module>Store/DataAccessLayer</module>
         <module>Store/ServiceLayer</module>
         <module>Store/Front</module>
+        <module>Demos/CacheDemo</module>
     </modules>
 
     <properties>
