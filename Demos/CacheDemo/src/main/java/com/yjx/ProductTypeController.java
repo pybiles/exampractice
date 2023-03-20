@@ -21,7 +21,10 @@ public class ProductTypeController {
     @RequestMapping("all")
     @ResponseBody
     public List<ProductType> all(){
+        long start = System.currentTimeMillis();  //当前系统时间的毫秒值
         List<ProductType> productTypes = productTypeService.getAll();
+        long end = System.currentTimeMillis();
+        System.out.println("开始时间: "+start+"  结束时间: "+end+" 共计耗时:"+(end-start)+" ms");
         return productTypes;
     }
 
