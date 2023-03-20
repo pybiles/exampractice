@@ -21,6 +21,19 @@ spring:
   #thymeleaf是spring下的配置
   thymeleaf:
     cache: false
+  #邮件授权配置
+  mail:
+    host: smtp.qq.com
+    username: xuanyuanmoli@qq.com  #用你自己的
+    password: wufarktkfxezihfe   # 用你自己的  邮箱授权码
+    default-encoding: utf-8
+    port: 465
+    properties:
+      mail:
+        debug: true
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
 
 #mybatis—plus与spring是并列的关系
 mybatis-plus:
