@@ -158,6 +158,8 @@ public class UserController {
         Cookie cookie = new Cookie("user_token", token);
         cookie.setPath("/");
         response.addCookie(cookie);
+        //生成关联数据,发到redis中
+        stringRedisTemplate.opsForValue().set(token,userByUsername.getUsername(),40,TimeUnit.MINUTES);
         return "ok";
     }
 
@@ -194,6 +196,16 @@ public class UserController {
         cookie.setMaxAge(0); //cookie有效期设置为0,等效于删除
         cookie.setPath("/");
         response.addCookie(cookie);
+
+        //先尝试拿到目标cookie
+        List<Cookie> cookieList = Arrays.stream(request.getCookies()).filter(innerCookie -> {
+            return innerCookie.getName().equals("user_token");
+        }).collect(Collectors.toList());
+        //再尝试删除redis中的关联数据
+        if (cookieList.size()==1){
+            stringRedisTemplate.delete(cookieList.get(0).getValue());
+        }
+
         return "ok";
     }
 
