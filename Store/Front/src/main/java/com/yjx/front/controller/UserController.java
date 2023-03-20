@@ -5,6 +5,7 @@ import com.yjx.dal.entity.User;
 import com.yjx.service.UserService;
 import com.yjx.service.util.JwtUtil;
 import com.yjx.service.util.Md5Util;
+import com.yjx.service.util.UserTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
@@ -151,61 +152,23 @@ public class UserController {
         if (!userByUsername.getPassword().equalsIgnoreCase(Md5Util.encode(password))) {
             return "用户名或密码错误";
         }
-        //保存当前用户信息到session中
-//        request.getSession().setAttribute("currentUserUsername",userByUsername.getUsername());
-        //生成jwtToken,并放到Cookie中去
-        String token = JwtUtil.createTokenSingleInfo(20, "username", userByUsername.getUsername());
-        Cookie cookie = new Cookie("user_token", token);
-        cookie.setPath("/");
-        response.addCookie(cookie);
-        //生成关联数据,发到redis中
-        stringRedisTemplate.opsForValue().set(token,userByUsername.getUsername(),40,TimeUnit.MINUTES);
+        UserTokenUtil.createUserToken(userByUsername.getUsername(),response,stringRedisTemplate);
         return "ok";
     }
 
     //获取当前用户信息
     @RequestMapping("getCurrentUserUsername")
-    public String getCurrentUserAccount(HttpServletRequest request) {
+    public String getCurrentUserUsername(HttpServletRequest request) {
 
-//        String currentUserUsername = (String) request.getSession().getAttribute("currentUserUsername");
-//        if (StringUtils.isEmpty(currentUserUsername)){
-//            currentUserUsername = "";
-//        }
-        String currentUserUsername = "";
+        String userUsername = UserTokenUtil.getUserUsername(request);
 
-        //先尝试拿到目标cookie
-        List<Cookie> cookieList = Arrays.stream(request.getCookies()).filter(cookie -> {
-            return cookie.getName().equals("user_token");
-        }).collect(Collectors.toList());
-
-        //再尝试从cookie中解析出用户名
-        if (cookieList.size() == 1) {
-            currentUserUsername = JwtUtil.parseValueWithoutException(cookieList.get(0).getValue(), "username");
-        }
-
-
-        return currentUserUsername;
+        return userUsername;
     }
 
     @RequestMapping("logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
 
-//        request.getSession().removeAttribute("currentUserUsername");
-
-        Cookie cookie = new Cookie("user_token", "xxx");
-        cookie.setMaxAge(0); //cookie有效期设置为0,等效于删除
-        cookie.setPath("/");
-        response.addCookie(cookie);
-
-        //先尝试拿到目标cookie
-        List<Cookie> cookieList = Arrays.stream(request.getCookies()).filter(innerCookie -> {
-            return innerCookie.getName().equals("user_token");
-        }).collect(Collectors.toList());
-        //再尝试删除redis中的关联数据
-        if (cookieList.size()==1){
-            stringRedisTemplate.delete(cookieList.get(0).getValue());
-        }
-
+        UserTokenUtil.deleteUserToken(response,request,stringRedisTemplate);
         return "ok";
     }
 
