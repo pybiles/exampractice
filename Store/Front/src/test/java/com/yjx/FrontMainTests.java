@@ -1,16 +1,13 @@
 package com.yjx;
 
-import com.yjx.dal.entity.ProductType;
 import com.yjx.service.ProductService;
 import com.yjx.service.ProductTypeService;
 import com.yjx.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @SpringBootTest
 public class FrontMainTests {
