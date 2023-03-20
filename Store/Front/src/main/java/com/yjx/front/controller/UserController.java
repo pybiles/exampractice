@@ -1,8 +1,7 @@
 package com.yjx.front.controller;
 
-
+import com.google.code.kaptcha.Producer;
 import com.yjx.dal.entity.User;
-import com.yjx.dal.mapper.UserMapper;
 import com.yjx.service.UserService;
 import com.yjx.service.util.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +38,8 @@ public class UserController {
     StringRedisTemplate stringRedisTemplate;
     @Autowired
     UserService userService;
+    @Autowired
+    Producer producer;
 
     @RequestMapping("getEmailCode")
     public String getEmailCode(String email) {
@@ -105,6 +110,18 @@ public class UserController {
         //发送欢迎邮件
         sendEmail(email, "Welcome to Our Animals", "Have a good travel!");
         return "ok";
+    }
+    @RequestMapping("kaptchaCode")
+    public void kaptchaCode(HttpServletResponse response) throws IOException {
+        //1.生成验证码字符串
+        String kaptchaCode  = producer.createText();
+
+        //2.字符串转为图片
+        BufferedImage image = producer.createImage(kaptchaCode);
+
+        response.setContentType("image/jpeg");
+        ImageIO.write(image,"jpg",response.getOutputStream());
+
     }
 
 }

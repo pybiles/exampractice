@@ -37,7 +37,7 @@
                     <div class="form-group">
                         <label for="code">验证码</label>
                         <input type="text" name="code" class="form-control" id="code" placeholder="请输入验证码">
-                        <a ><img src="" alt="..." id="codeImg" />点击刷新</a>
+                        <a href="" @click.prevent="refreshKaptchaCode"><img src="/user/kaptchaCode" alt="..." id="codeImg" />点击刷新</a>
                     </div>
 
                     <button class="btn btn-success">登 录</button>
@@ -62,6 +62,10 @@
 
         },
         methods:{
+            refreshKaptchaCode(){
+                let src = "/user/kaptchaCode?date="+new Date().valueOf();
+                $("#codeImg").attr("src",src)
+            }
 
         },
         created(){
