@@ -16,7 +16,7 @@ public class ProductTypeService {
     ProductTypeMapper productTypeMapper;
 
     //执行该方法需要使用缓存   value别名cacheName,值得是组名
-    @Cacheable(value = "productTypesDemo",key = "#root.targetClass+#root.methodName")
+    @Cacheable(value = "productTypesDemo",keyGenerator = "myKeyGenerator")
 //    @Cacheable(cacheNames = "productTypesDemo",key = "#root.targetClass+#root.methodName")
     public List<ProductType> getAll() {
 
