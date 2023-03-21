@@ -30,10 +30,9 @@
                     {{productTypeInfo.typeName}} 类商品</p>
             </div>
         </div>
-        <div class="row">
+          <div class="row">
             <div class="col-sm-6 col-md-4" v-for="product in pageData.records">
-                <div class="col-sm-6 col-md-4">
-                    <div class="thumbnail">
+                <div class=" col-md-6">
                         <img :src="product.productImgsrc" alt="..." class="col-sm-6 col-md-6"
                              style="width: 140px;height: 130px">
                         <div class="caption text-left">
@@ -45,7 +44,6 @@
                                 <a class="btn btn-success">加入购物车</a>
                             </p>
                         </div>
-                    </div>
                 </div>
             </div>
 
@@ -65,78 +63,79 @@
 
     </div>
 
-    <script>
 
-        console.log("------productsOfType-----")
-
-        let app = new Vue({
-            el: "#app",
-            data: {
-                productTypeId: -1,
-                productTypeInfo: {},
-                pageData: {
-                    current: 1,
-                    size: 3,
-                    total: -1,
-                    records: [],
-                    pages: -1
-                }
-            },
-            methods: {
-                initProductTypeInfo() {
-                    let vueObj = this;
-                    $.get("/productType/detail", {productTypeId: this.productTypeId}, function (data) {
-                        console.log(data)
-                        vueObj.productTypeInfo = data;
-                    })
-                }
-                ,
-                initPageData() {
-                    let vueObj = this;
-                    let params = {
-                        currentPage: this.pageData.current,
-                        pageSize: this.pageData.size,
-                        typeId: this.productTypeId
-                    }
-                    $.post("/product/pageByType", params, function (data) {
-                        console.log(data)
-                        vueObj.pageData = data;
-                    })
-                }
-                ,
-                seeDetail(productId) {
-                    console.log("去查看" + productId + "详情")
-                    sessionStorage.setItem("toSeeDetailProductId", productId)
-                    location.href = "/singleProduct.html"
-                }
-                ,
-                goPage(pageNum) {
-                    if (pageNum < 1 || pageNum > this.pageData.pages || pageNum == this.pageData.current) {
-                        console.log("无效pageNum " + pageNum);
-                        return
-                    }
-
-                    this.pageData.current = pageNum;
-                    this.initPageData();
-                }
-            },
-            created() {
-                let productTypeId = sessionStorage.getItem("seeProductsOfType");
-                console.log(productTypeId)
-
-                this.productTypeId = productTypeId;
-
-                this.initProductTypeInfo();
-
-                this.initPageData();
-            }
-        })
-
-    </script>
-
-
-    <div th:insert="publicFooter.html"></div>
 
 </div>
+<script>
+
+    console.log("------productsOfType-----")
+
+    let app = new Vue({
+        el: "#app",
+        data: {
+            productTypeId: -1,
+            productTypeInfo: {},
+            pageData: {
+                current: 1,
+                size: 3,
+                total: -1,
+                records: [],
+                pages: -1
+            }
+        },
+        methods: {
+            initProductTypeInfo() {
+                let vueObj = this;
+                $.get("/productType/detail", {productTypeId: this.productTypeId}, function (data) {
+                    console.log(data)
+                    vueObj.productTypeInfo = data;
+                })
+            }
+            ,
+            initPageData() {
+                let vueObj = this;
+                let params = {
+                    currentPage: this.pageData.current,
+                    pageSize: this.pageData.size,
+                    typeId: this.productTypeId
+                }
+                $.post("/product/pageByType", params, function (data) {
+                    console.log(data)
+                    vueObj.pageData = data;
+                })
+            }
+            ,
+            seeDetail(productId) {
+                console.log("去查看" + productId + "详情")
+                sessionStorage.setItem("toSeeDetailProductId", productId)
+                location.href = "/singleProduct.html"
+            }
+            ,
+            goPage(pageNum) {
+                if (pageNum < 1 || pageNum > this.pageData.pages || pageNum == this.pageData.current) {
+                    console.log("无效pageNum " + pageNum);
+                    return
+                }
+
+                this.pageData.current = pageNum;
+                this.initPageData();
+            }
+        },
+        created() {
+            let productTypeId = sessionStorage.getItem("seeProductsOfType");
+            console.log(productTypeId)
+
+            this.productTypeId = productTypeId;
+
+            this.initProductTypeInfo();
+
+            this.initPageData();
+        }
+    })
+
+</script>
+
+
+<div th:insert="publicFooter.html"></div>
 </body>
 </html>

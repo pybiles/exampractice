@@ -34,6 +34,10 @@ public class HomeController {
 
             return "单消费者ok "+date;
         } else if (mqType==2) {
+            String msg = "一条来自生产者的消息 "+new Date();
+
+            //生产发送消息
+            rabbitTemplate.convertAndSend("","work_queues",msg);
 
             return "多消费者ok "+date;
         } else if (mqType==3) {
