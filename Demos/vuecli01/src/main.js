@@ -26,7 +26,8 @@ let router = new VueRouter({
   routes:[
     {path:"/",name:"Index",component:Index},
     {path:"/Index",name:"Index",component:Index},
-    {path:"/Goods",name:"Goods",component:Goods,
+    // {path:"/Goods",name:"Goods",component:Goods,
+    {path:"/Goods/:name/:pass",name:"Goods",component:Goods,
       children:[
         {path:"/Food",name:"Food",component:Food},
         {path:"/Arms",name:"Arms",component:Arms},
