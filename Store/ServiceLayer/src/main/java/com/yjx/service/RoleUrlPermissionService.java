@@ -1,6 +1,6 @@
 package com.yjx.service;
 
-import com.yjx.front.entity.RoleUrlPermission;
+import com.yjx.dal.entity.RoleUrlPermission;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

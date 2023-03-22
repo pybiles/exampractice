@@ -1,9 +1,11 @@
 package com.yjx.service.impl;
 
-import com.yjx.front.entity.Manager;
-import com.yjx.front.mapper.ManagerMapper;
-import com.yjx.front.service.ManagerService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yjx.dal.entity.Manager;
+import com.yjx.dal.mapper.ManagerMapper;
+import com.yjx.service.ManagerService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +18,19 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ManagerServiceImpl extends ServiceImpl<ManagerMapper, Manager> implements ManagerService {
+    @Autowired
+    ManagerMapper managerMapper;
+
+    @Override
+    public Manager checkLogin(String username, String password) {
+        QueryWrapper<Manager> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_name", username);
+        queryWrapper.eq("user_password", password);
+
+
+        Manager manager = managerMapper.selectOne(queryWrapper);
+        return manager;
+    }
 
 }
+

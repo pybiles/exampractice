@@ -1,6 +1,6 @@
 package com.yjx.service;
 
-import com.yjx.front.entity.UrlPermission;
+import com.yjx.dal.entity.UrlPermission;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

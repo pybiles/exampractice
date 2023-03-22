@@ -1,9 +1,9 @@
 package com.yjx.service.impl;
 
-import com.yjx.front.entity.UrlPermission;
-import com.yjx.front.mapper.UrlPermissionMapper;
-import com.yjx.front.service.UrlPermissionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yjx.dal.entity.UrlPermission;
+import com.yjx.dal.mapper.UrlPermissionMapper;
+import com.yjx.service.UrlPermissionService;
 import org.springframework.stereotype.Service;
 
 /**

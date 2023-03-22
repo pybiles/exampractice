@@ -1,8 +1,8 @@
 package com.yjx.service.impl;
 
-import com.yjx.front.entity.China;
-import com.yjx.front.mapper.ChinaMapper;
-import com.yjx.front.service.ChinaService;
+import com.yjx.dal.entity.China;
+import com.yjx.dal.mapper.ChinaMapper;
+import com.yjx.service.ChinaService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 

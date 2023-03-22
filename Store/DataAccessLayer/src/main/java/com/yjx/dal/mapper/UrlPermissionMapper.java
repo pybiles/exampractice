@@ -1,6 +1,6 @@
 package com.yjx.dal.mapper;
 
-import com.yjx.front.entity.UrlPermission;
+import com.yjx.dal.entity.UrlPermission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

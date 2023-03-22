@@ -1,6 +1,6 @@
 package com.yjx.dal.mapper;
 
-import com.yjx.front.entity.China;
+import com.yjx.dal.entity.China;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

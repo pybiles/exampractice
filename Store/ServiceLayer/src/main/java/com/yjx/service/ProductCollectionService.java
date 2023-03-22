@@ -1,6 +1,6 @@
 package com.yjx.service;
 
-import com.yjx.front.entity.ProductCollection;
+import com.yjx.dal.entity.ProductCollection;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

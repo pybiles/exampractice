@@ -1,6 +1,6 @@
 package com.yjx.service;
 
-import com.yjx.front.entity.Role;
+import com.yjx.dal.entity.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

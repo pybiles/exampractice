@@ -1,8 +1,8 @@
 package com.yjx.service.impl;
 
-import com.yjx.front.entity.Role;
-import com.yjx.front.mapper.RoleMapper;
-import com.yjx.front.service.RoleService;
+import com.yjx.dal.entity.Role;
+import com.yjx.dal.mapper.RoleMapper;
+import com.yjx.service.RoleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 

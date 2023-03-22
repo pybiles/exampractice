@@ -1,8 +1,8 @@
 package com.yjx.service.impl;
 
-import com.yjx.front.entity.RoleUrlPermission;
-import com.yjx.front.mapper.RoleUrlPermissionMapper;
-import com.yjx.front.service.RoleUrlPermissionService;
+import com.yjx.dal.entity.RoleUrlPermission;
+import com.yjx.dal.mapper.RoleUrlPermissionMapper;
+import com.yjx.service.RoleUrlPermissionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,8 @@
 package com.yjx.service.impl;
 
-import com.yjx.front.entity.ProductCollection;
-import com.yjx.front.mapper.ProductCollectionMapper;
-import com.yjx.front.service.ProductCollectionService;
+import com.yjx.dal.entity.ProductCollection;
+import com.yjx.dal.mapper.ProductCollectionMapper;
+import com.yjx.service.ProductCollectionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 

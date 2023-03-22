@@ -1,6 +1,6 @@
 package com.yjx.service;
 
-import com.yjx.front.entity.China;
+import com.yjx.dal.entity.China;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

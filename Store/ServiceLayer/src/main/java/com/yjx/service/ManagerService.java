@@ -1,6 +1,6 @@
 package com.yjx.service;
 
-import com.yjx.front.entity.Manager;
+import com.yjx.dal.entity.Manager;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-03-22 07:20:39
  */
 public interface ManagerService extends IService<Manager> {
-
+    Manager checkLogin(String username, String password);
 }
