@@ -19,7 +19,7 @@ public class MyBatisPlusGenerator {
         String dbUrl="jdbc:mysql://127.0.0.1:3306/shopsystem?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true";
         String dbUsername="root";
         String dbPassword="12345678";
-        String[] tableNames = {"t_user","t_order_item","t_order","t_product","t_product_type","t_cart","t_address"};
+        String[] tableNames = {"t_url_permission","t_role_url_permission","t_role","t_manager_role","t_manager","t_china","t_product_collection"};
 
 
         String authorName="yjx";

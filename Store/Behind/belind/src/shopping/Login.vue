@@ -23,8 +23,8 @@
           ></el-input>
         </el-form-item>
         <el-form-item class="btn">
-          <el-button type="primary" >登录</el-button>
-          <el-button type="info" >重置</el-button>
+          <el-button type="primary" @click="submitLoginForm" >登录</el-button>
+          <el-button type="info"  @click="resetLoginForm" >重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -54,6 +54,33 @@ export default {
     };
   },
   methods: {
+
+    resetLoginForm(){
+      this.$refs.loginForm.resetFields();
+    }
+    ,
+    submitLoginForm(){
+
+      this.$refs.loginForm.validate((validate) => {
+        console.log(this.loginForm)
+
+        if(!validate){
+          this.$message({
+            message:"请正确填写表单",
+            type:"error",
+            duration:2000,
+          })
+
+          return;
+        }
+
+        //todo 请求后端接口进行校验
+
+        this.$router.push("/Home")
+      })
+
+
+    }
 
 
   }
