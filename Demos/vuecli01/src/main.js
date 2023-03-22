@@ -9,37 +9,8 @@ import './registerServiceWorker'
 //简化生产环境的提示
 Vue.config.productionTip = false
 
-
-//--------路由部分---------------------
-//引入路由插件
-import VueRouter from "vue-router";
-Vue.use(VueRouter)
-
-import Goods from "@/routerviews/Goods.vue";
-import Index from "@/routerviews/Index.vue";
-import Manager from "@/routerviews/Manager.vue";
-import Food from "@/routerviews/goods/Food.vue";
-import Arms from "@/routerviews/goods/Arms.vue";
-
-//配置路由路径与组件的匹配关系
-let router = new VueRouter({
-  routes:[
-    {path:"/",name:"Index",component:Index},
-    {path:"/Index",name:"Index",component:Index},
-    // {path:"/Goods",name:"Goods",component:Goods,
-    {path:"/Goods/:name/:pass",name:"Goods",component:Goods,
-      children:[
-        {path:"/Food",name:"Food",component:Food},
-        {path:"/Arms",name:"Arms",component:Arms},
-      ]
-    },
-    {path:"/Manager",name:"Manager",component:Manager},
-
-  ],
-  mode:"history"
-})
-
-
+import router from "@/routers";
+//如果文件下只有一个js文件,那具体文件名可以省略, 等价于 import router from "@/routers/index";
 
 
 //创建一个Vue对象
