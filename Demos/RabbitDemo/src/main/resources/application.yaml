@@ -4,5 +4,5 @@ spring:
     port: 5672
     username: guest
     password: guest
-
+    publisher-confirm-type: correlated  #开启确认机制
 debug: true
