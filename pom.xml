@@ -26,6 +26,7 @@
         <module>Demos/ThreadDemo</module>
         <module>Demos/RabbitMQDemo</module>
         <module>Store/Behind/BehindServer</module>
+        <module>Demos/RabbitDemo</module>
     </modules>
 
     <properties>
