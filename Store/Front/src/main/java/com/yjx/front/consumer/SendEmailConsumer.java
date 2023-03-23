@@ -1,5 +1,6 @@
 package com.yjx.front.consumer;
 
+import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,25 +8,34 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class TestSendEmailConsumer {
+public class SendEmailConsumer {
 
     @Autowired
     JavaMailSender javaMailSender;
 
-    @RabbitListener(queues = "test_send_email")
-    public void onMsg(Message message, Map<String,String> infoMap){
+    @RabbitListener(queues = "sendEmailQueue")
+    public void onMsg(Message message, Map<String,String> infoMap, Channel channel) throws IOException {
 
-        System.out.println(infoMap);
-        System.out.println(message);
+        try {
+            System.out.println(infoMap);
+            System.out.println(message);
 
-        System.out.println("接收发送邮件的需求 "+new Date());
-        sendEmail(infoMap.get("email"),infoMap.get("subject"),infoMap.get("text"));
-        System.out.println("邮件发送成功 "+new Date());
+            System.out.println("接收发送邮件的需求 " + new Date());
+            sendEmail(infoMap.get("email"), infoMap.get("subject"), infoMap.get("text"));
+            System.out.println("邮件发送成功 " + new Date());
+
+        }catch (Exception e){
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(),false,false);
+            return;
+        }
+
+        channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
     }
 
 

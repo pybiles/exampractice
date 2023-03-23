@@ -3,7 +3,6 @@ package com.yjx.front.controller;
 import com.google.code.kaptcha.Producer;
 import com.yjx.dal.entity.User;
 import com.yjx.service.UserService;
-import com.yjx.service.util.JwtUtil;
 import com.yjx.service.util.Md5Util;
 import com.yjx.service.util.UserTokenUtil;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -13,18 +12,16 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -147,7 +144,7 @@ public class UserController {
         infoMap.put("subject","Welcome to Our Animals");
         infoMap.put("text","Have a good travel!");
         // 交换机”“ 消息队列 test_send_email 要发送的消息 infoMap
-        rabbitTemplate.convertAndSend("","test_send_email",infoMap);
+        rabbitTemplate.convertAndSend("sendEmailExchange","sendEmail",infoMap);
         return "ok";
 
     }
