@@ -1,8 +1,11 @@
 package com.yjx.dal.mapper;
 
+import com.yjx.dal.model.PermissionMenu;
 import com.yjx.dal.entity.UrlPermission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,5 +17,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UrlPermissionMapper extends BaseMapper<UrlPermission> {
-
+    List<PermissionMenu> selectAllRootMenu();
 }

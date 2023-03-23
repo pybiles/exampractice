@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yjx.dal.mapper.UrlPermissionMapper">
-
+    <resultMap id="menuMap" type="com.yjx.dal.model.PermissionMenu">
+        <id property="id" column="id"></id>
+        <result column="name" property="name"></result>
+        <result column="url" property="url"></result>
+        <result column="parent_id" property="parentId"></result>
+        <collection property="children" ofType="com.yjx.dal.model.PermissionMenu">
+            <id column="cid" property="id"></id>
+            <result column="cname" property="name"></result>
+            <result column="curl" property="url"></result>
+            <result column="cpid" property="parentId"></result>
+        </collection>
+    </resultMap>
+    <select id="selectAllRootMenu" resultMap="menuMap">
+        select
+            p.id,p.name,p.url,p.parent_id,
+            c.id as cid,c.name as cname,c.url as curl,c.parent_id as cpid
+        from
+            t_url_permission  p
+                LEFT JOIN
+            t_url_permission c
+            on p.id = c.parent_id
+        WHERE p.parent_id = -1
+    </select>
 </mapper>
