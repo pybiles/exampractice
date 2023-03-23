@@ -18,6 +18,34 @@ import axios from "axios";
 axios.defaults.baseURL="http://localhost:9191/"
 //绑定到vue上
 Vue.prototype.$axios=axios;
+//配置axios
+axios.interceptors.request.use((config)=>{
+
+    console.log(config)
+
+    //尝试将本地token加入到请求头中
+    let token = sessionStorage.getItem("token");
+    if(token){
+        config.headers['token']=token;
+    }
+
+    return config
+})
+
+axios.interceptors.response.use((config)=>{
+
+    console.log(config)
+
+    //如果响应值是"toLogin",那就直接到登录页去
+    if(config.data == 'toLogin'){
+        sessionStorage.removeItem("token")
+        location.href="/Login"
+        return
+    }
+
+    return config
+})
+
 
 new Vue({
     router,

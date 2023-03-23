@@ -16,6 +16,8 @@ public class CrossOriginFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse)response;
         httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
 
+        //允许自定义请求头
+        httpServletResponse.addHeader("Access-Control-Allow-Headers","*");
 
         //放行
         chain.doFilter(request,response);
