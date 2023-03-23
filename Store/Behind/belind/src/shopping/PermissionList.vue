@@ -42,6 +42,20 @@
         </el-table-column>
       </el-table>
 
+
+
+      <!--分页-->
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[5, 8, 15, 20]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
+      </el-pagination>
+
+
     </el-card>
 
 
@@ -84,6 +98,21 @@ export default {
 
           })
 
+    }
+    ,
+    handleSizeChange(size){
+      console.log(size)
+
+      this.currentPage=1;
+      this.pageSize = size;
+      this.initPermissionList();
+    }
+    ,
+    handleCurrentChange(current){
+      console.log(current)
+
+      this.currentPage = current;
+      this.initPermissionList();
     }
 
   },
