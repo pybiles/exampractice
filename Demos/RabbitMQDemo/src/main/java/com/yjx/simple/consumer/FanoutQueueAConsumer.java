@@ -1,0 +1,22 @@
+package com.yjx.simple.consumer;
+
+
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
+
+@Component
+public class FanoutQueueAConsumer {
+
+
+    //消费者,监听 simple_queue 队列
+    @RabbitListener(queues = "fanoutQueueA")
+    public void onMsg(Message message, String msg){
+        System.out.println(message);
+        System.out.println("fanoutQueueA "+msg);
+    }
+
+
+
+}
+

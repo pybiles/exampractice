@@ -42,6 +42,9 @@ public class HomeController {
             return "多消费者ok "+date;
         } else if (mqType==3) {
 
+            String msg = "一条来自生产者的消息 "+new Date();
+            rabbitTemplate.convertAndSend("fanoutExchange","xxx",msg);
+
             return "Fanout 交换机-广播模式 ok "+date;
         } else if (mqType==4) {
 
