@@ -15,7 +15,7 @@
         <!--权限搜索框-->
         <el-col :span="8">
           <el-input placeholder="请输权限名称" clearable v-model="keyword" >
-            <el-button slot="append" icon="el-icon-search"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="initPermissionList"></el-button>
           </el-input>
         </el-col>
 
@@ -56,14 +56,39 @@ export default {
     return {
       keyword:"", //要搜索的权限名称
       permissionList:[], //权限搜索结果
+      currentPage:1,
+      pageSize:5,
+      total:0
 
     };
   },
   methods:{
+    initPermissionList(){
+
+      let params = {
+        currentPage:this.currentPage,
+        pageSize: this.pageSize,
+        keyword: this.keyword
+      }
+
+      this.$axios.postForm("/urlPermission/pageSearch",params)
+          .then(response=>{
+            let responseData = response.data
+
+            let pageData = responseData.data;
+
+            this.currentPage = pageData.current;
+            this.pageSize = pageData.size;
+            this.total = pageData.total;
+            this.permissionList = pageData.records;
+
+          })
+
+    }
 
   },
   created() {
-
+    this.initPermissionList()
   }
 
 }
