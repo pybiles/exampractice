@@ -48,6 +48,15 @@ public class HomeController {
             return "Fanout 交换机-广播模式 ok "+date;
         } else if (mqType==4) {
 
+            String errorMsg = "一条来自生产者的 error 消息 "+new Date();
+            String infoMsg = "一条来自生产者的 info 消息 "+new Date();
+            String warningMsg = "一条来自生产者的 warning 消息 "+new Date();
+
+            rabbitTemplate.convertAndSend("directExchange","error",errorMsg);
+            rabbitTemplate.convertAndSend("directExchange","info",infoMsg);
+            rabbitTemplate.convertAndSend("directExchange","warning",warningMsg);
+
+
             return "Direct 交换机-定向模式 ok "+date;
         } else if (mqType==5) {
 
