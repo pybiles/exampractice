@@ -8,6 +8,7 @@ import Login from "@/shopping/Login.vue";
 import TestElementUI from "@/shopping/TestElementUI.vue";
 import Home from "@/shopping/Home.vue";
 import Overview from "@/shopping/Overview.vue";
+import PermissionList from "@/shopping/PermissionList.vue";
 
 const routes = [
     //我们在这里配置自己的路由规则
@@ -18,6 +19,7 @@ const routes = [
         path: "/Home", name: "Home", component: Home,
         children: [
             {path: "/", name: "Overview", component: Overview},
+            {path:"/PermissionList",name:"PermissionList",component:PermissionList},
         ]
     },
 ]
