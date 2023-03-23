@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2023-03-22 07:20:39
  */
 @RestController
-@CrossOrigin //指定当前类下的所有接口支持跨域访问
+//@CrossOrigin //指定当前类下的所有接口支持跨域访问
 @RequestMapping("/manager")
 public class ManagerController {
     @Autowired
