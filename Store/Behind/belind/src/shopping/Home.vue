@@ -148,10 +148,19 @@ export default {
       sessionStorage.removeItem("token")
       location.href="/"
     }
+    ,
+    initMenuList(){
+      this.$axios.get("/urlPermission/all")
+          .then(response => {
+            let responseData = response.data;
+            this.menuList = responseData.data;
+          })
+    }
 
   },
   created() {
     this.initCurrentUserName();
+    this.initMenuList();
   }
 };
 </script>

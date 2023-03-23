@@ -27,9 +27,16 @@ public class UrlPermissionController {
 
     @RequestMapping("all")
     public Result<List<PermissionMenu>> all(){
+        long a = System.currentTimeMillis();
         List<PermissionMenu> allRootMenuBySql = urlPermissionService.getAllRootMenuBySql();
+        long b = System.currentTimeMillis();
 
-        return Result.successResult(allRootMenuBySql);
+        List<PermissionMenu> allRootMenuByMap = urlPermissionService.getAllRootMenuByMap();
+        long c = System.currentTimeMillis();
+
+        System.out.println("allRootMenuBySql耗时 "+(b-a)+"ms  allRootMenuByMap耗时 "+(c-b)+"ms");
+
+        return Result.successResult(allRootMenuByMap);
     }
 
 }

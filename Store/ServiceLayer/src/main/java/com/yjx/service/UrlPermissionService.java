@@ -16,4 +16,5 @@ import java.util.List;
  */
 public interface UrlPermissionService extends IService<UrlPermission> {
     List<PermissionMenu> getAllRootMenuBySql();
+    List<PermissionMenu> getAllRootMenuByMap();
 }

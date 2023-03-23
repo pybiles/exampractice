@@ -8,7 +8,10 @@ import com.yjx.service.UrlPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -27,5 +30,44 @@ public class UrlPermissionServiceImpl extends ServiceImpl<UrlPermissionMapper, U
     public List<PermissionMenu> getAllRootMenuBySql() {
         List<PermissionMenu> menuList = urlPermissionMapper.selectAllRootMenu();
         return menuList;
+    }
+
+    @Override
+    public List<PermissionMenu> getAllRootMenuByMap() {
+        //查出所有数据,转换为List<PermissionMenu>
+        List<UrlPermission> urlPermissions = urlPermissionMapper.selectList(null);
+        List<PermissionMenu> permissionMenuList = urlPermissions.stream().map(urlPermission -> {
+            PermissionMenu permissionMenu = new PermissionMenu();
+
+            permissionMenu.setId(urlPermission.getId());
+            permissionMenu.setName(urlPermission.getName());
+            permissionMenu.setUrl(urlPermission.getUrl());
+            permissionMenu.setParentId(urlPermission.getParentId());
+            permissionMenu.setChildren(new ArrayList<>());
+
+            return permissionMenu;
+        }).collect(Collectors.toList());
+
+        //转换为Map<PermissionMenu.id,PermissionMenu>
+        HashMap<Long, PermissionMenu> permissionMenuHashMap = new HashMap<>();
+        permissionMenuList.forEach(permissionMenu -> {
+            permissionMenuHashMap.put(permissionMenu.getId(),permissionMenu);
+        });
+
+        //遍历Map,根据parentId找到父PermissionMenu,把自身放到父PermissionMenu的children
+        permissionMenuHashMap.forEach( (id,permissionMenu) -> {
+            //找到自己的父元素
+            PermissionMenu parent = permissionMenuHashMap.get(permissionMenu.getParentId());
+            if (parent!=null){
+                parent.getChildren().add(permissionMenu);
+            }
+        });
+
+        //过滤出一级菜单
+        List<PermissionMenu> rootPermissionMenuList = permissionMenuHashMap.values().stream().filter(permissionMenu -> {
+            return permissionMenu.getParentId() == -1;
+        }).collect(Collectors.toList());
+
+        return rootPermissionMenuList;
     }
 }
