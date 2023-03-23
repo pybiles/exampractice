@@ -59,6 +59,14 @@ public class HomeController {
 
             return "Direct 交换机-定向模式 ok "+date;
         } else if (mqType==5) {
+            String[] routingKeys = new String[]{"fast.orange.dog","lazy.blue.chicken",
+                    "lazy.orange.cat","fast.blue.rabbit","speed.green.rabbit","spedd.red.monkey"};
+
+            for(String routingKey : routingKeys){
+                String msg = "一条来自生产者的 "+routingKey+" 消息 "+new Date();
+                rabbitTemplate.convertAndSend("topicExchange",routingKey,msg);
+            }
+
 
             return "Topic 交换机-模糊匹配模式 "+date;
         }
