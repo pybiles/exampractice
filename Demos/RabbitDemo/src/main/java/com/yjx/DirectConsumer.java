@@ -21,6 +21,9 @@ public class DirectConsumer {
             int a = 3 / 0;
         }catch (Exception e){
             //log ...
+            // requeue指定当前消息是否还需要放回队列中找其它消费者执行
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(),false,true);
+            return;
         }
 
         channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
