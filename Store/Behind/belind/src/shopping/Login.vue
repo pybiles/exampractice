@@ -22,7 +22,7 @@
               type="password"
           ></el-input>
         </el-form-item>
-        <el-form-item class="btn">
+        <el-form-item class="btns">
           <el-button type="primary" @click="submitLoginForm" >登录</el-button>
           <el-button type="info"  @click="resetLoginForm" >重置</el-button>
         </el-form-item>
@@ -74,14 +74,36 @@ export default {
           return;
         }
 
-        //todo 请求后端接口进行校验
+        //请求后端接口进行校验
+        // 第一个 url地址    第二个  请求参数
+        this.$axios.postForm("/manager/login",this.loginForm)
+            .then(reponse => {
+              console.log( reponse )
 
-        this.$router.push("/Home")
+              let responseData = reponse.data; //服务端响应的数据
+              if (responseData.code == 200){
+
+                this.$message({
+                  message:"登录成功",
+                  type:"success",
+                  duration:2000,
+                })
+
+                this.$router.push("/Home")
+              }else {
+                this.$message({
+                  message:responseData.msg,
+                  type:"error",
+                  duration:2000,
+                })
+              }
+
+            })
+
       })
 
 
     }
-
 
   }
 }
@@ -120,7 +142,7 @@ export default {
     }
   }
 }
-.btn {
+.btns {
   display: flex;
   justify-content: center;
 }
