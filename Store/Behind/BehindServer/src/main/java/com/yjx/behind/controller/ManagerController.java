@@ -4,12 +4,9 @@ package com.yjx.behind.controller;
 import com.yjx.behind.model.Result;
 import com.yjx.dal.entity.Manager;
 import com.yjx.service.ManagerService;
+import com.yjx.service.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -36,12 +33,19 @@ public class ManagerController {
         if (manager==null){
             result = Result.failResult("用户名或密码错误");
         }else {
-            result = Result.successResult("登录成功");
+            String token = JwtUtil.createTokenSingleInfo(24 * 60, "username", manager.getUserName());
+            result = Result.successResult(token);
         }
 
         return result;
     }
 
+    @GetMapping("getCurrentUserName")
+    public Result<String> getCurrentUserName(String token){
 
+        String username = JwtUtil.parseValueWithoutException(token, "username");
+
+        return Result.successResult(username);
+    }
 }
 

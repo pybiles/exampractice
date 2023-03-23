@@ -89,6 +89,10 @@ export default {
                   duration:2000,
                 })
 
+                //保存token到sessionStorage中,可以跨页面传递数据
+                sessionStorage.setItem("token",responseData.data)
+                // localStorage.
+
                 this.$router.push("/Home")
               }else {
                 this.$message({

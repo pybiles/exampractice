@@ -6,8 +6,9 @@
       <div>
         <img src="../assets/logo.png" />
         <span>后台管理系统</span>
+        <span>  欢迎您:{{currentUserName}}</span>
       </div>
-      <el-button type="info">退出</el-button>
+      <el-button type="info" @click="logout">退出</el-button>
     </el-header>
 
     <!--具体内容-->
@@ -55,6 +56,8 @@
   </el-container>
 </template>
 <script>
+import login from "@/shopping/Login.vue";
+
 export default {
   name: "Home",
   data() {
@@ -90,18 +93,65 @@ export default {
       //左侧菜单是否收窄
       isCollapse: false,
       //右侧内容区路由是否激活
-      isRouterAlive: true
+      isRouterAlive: true,
+      currentUserName:'',
     };
   },
   methods: {
     toggleClapse(){
       this.isCollapse = !this.isCollapse;
     }
+    ,
+    initCurrentUserName(){
+      let token = sessionStorage.getItem("token")
+      let config = {  //按照文档要求,组装get请求的参数
+        params:{
+          token:token
+        }
+      }
 
+      this.$axios.get("/manager/getCurrentUserName",config)
+          .then(response => {
+            console.log(response)
+
+            let responseData = response.data;
+            console.log(responseData)
+
+            if(responseData.code == 200){
+              let username = responseData.data;
+              if(username){
+                this.currentUserName = username;
+              }else {
+                this.$message({
+                  message:responseData.msg,
+                  type:"error",
+                  duration:2000,
+                })
+
+                this.logout();
+              }
+            }else {
+              this.$message({
+                message:"登录状态异常,请重新登录",
+                type:"error",
+                duration:2000,
+              })
+
+              this.logout();
+            }
+
+          })
+
+    }
+    ,
+    logout(){
+      sessionStorage.removeItem("token")
+      location.href="/"
+    }
 
   },
   created() {
-
+    this.initCurrentUserName();
   }
 };
 </script>
