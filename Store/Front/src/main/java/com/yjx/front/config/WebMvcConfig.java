@@ -27,6 +27,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addViewController("/productsOfType.html").setViewName("productsOfType");
         registry.addViewController("/register.html").setViewName("register");
         registry.addViewController("/login.html").setViewName("login");
+        registry.addViewController("/myCart.html").setViewName("myCart");
+
     }
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
