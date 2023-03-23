@@ -5,4 +5,5 @@ spring:
     username: guest
     password: guest
     publisher-confirm-type: correlated  #开启确认机制
+    publisher-returns: true #开启无法正常到达队列的消息的退回机制
 debug: true
