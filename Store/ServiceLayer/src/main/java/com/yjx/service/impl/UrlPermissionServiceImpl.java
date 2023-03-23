@@ -1,5 +1,7 @@
 package com.yjx.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yjx.dal.model.PermissionMenu;
 import com.yjx.dal.entity.UrlPermission;
@@ -7,6 +9,7 @@ import com.yjx.dal.mapper.UrlPermissionMapper;
 import com.yjx.service.UrlPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,5 +72,20 @@ public class UrlPermissionServiceImpl extends ServiceImpl<UrlPermissionMapper, U
         }).collect(Collectors.toList());
 
         return rootPermissionMenuList;
+    }
+
+    @Override
+    public Page<UrlPermission> pageSearch(Integer currentPage, Integer pageSize, String keyword) {
+        Page<UrlPermission> page = new Page<>(currentPage,pageSize);
+
+        QueryWrapper<UrlPermission> queryWrapper = new QueryWrapper<>();
+        if (!StringUtils.isEmpty(keyword)){
+            queryWrapper.like("name",keyword);
+        }
+
+        Page<UrlPermission> permissionPage = urlPermissionMapper.selectPage(page, queryWrapper);
+
+        return permissionPage;
+
     }
 }

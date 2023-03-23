@@ -1,5 +1,6 @@
 package com.yjx.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yjx.dal.model.PermissionMenu;
 import com.yjx.dal.entity.UrlPermission;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -17,4 +18,6 @@ import java.util.List;
 public interface UrlPermissionService extends IService<UrlPermission> {
     List<PermissionMenu> getAllRootMenuBySql();
     List<PermissionMenu> getAllRootMenuByMap();
+    Page<UrlPermission> pageSearch(Integer currentPage, Integer pageSize, String keyword);
+
 }

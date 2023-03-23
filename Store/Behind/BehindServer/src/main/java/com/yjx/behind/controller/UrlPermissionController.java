@@ -1,7 +1,9 @@
 package com.yjx.behind.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yjx.behind.model.Result;
+import com.yjx.dal.entity.UrlPermission;
 import com.yjx.dal.model.PermissionMenu;
 import com.yjx.service.UrlPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,7 @@ public class UrlPermissionController {
     UrlPermissionService urlPermissionService;
 
     @RequestMapping("all")
-    public Result<List<PermissionMenu>> all(){
+    public Result<List<PermissionMenu>> all() {
         long a = System.currentTimeMillis();
         List<PermissionMenu> allRootMenuBySql = urlPermissionService.getAllRootMenuBySql();
         long b = System.currentTimeMillis();
@@ -34,9 +36,17 @@ public class UrlPermissionController {
         List<PermissionMenu> allRootMenuByMap = urlPermissionService.getAllRootMenuByMap();
         long c = System.currentTimeMillis();
 
-        System.out.println("allRootMenuBySql耗时 "+(b-a)+"ms  allRootMenuByMap耗时 "+(c-b)+"ms");
+        System.out.println("allRootMenuBySql耗时 " + (b - a) + "ms  allRootMenuByMap耗时 " + (c - b) + "ms");
 
         return Result.successResult(allRootMenuByMap);
+    }
+
+    @RequestMapping("pageSearch")
+    public Result<Page<UrlPermission>> pageSearch(Integer currentPage, Integer pageSize, String keyword) {
+
+        Page<UrlPermission> permissionPage = urlPermissionService.pageSearch(currentPage, pageSize, keyword);
+
+        return Result.successResult(permissionPage);
     }
 
 }
