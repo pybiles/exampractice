@@ -15,13 +15,13 @@
         <!--权限搜索框-->
         <el-col :span="8">
           <el-input placeholder="请输权限名称" clearable v-model="keyword" >
-            <el-button slot="append" icon="el-icon-search" @click="initPermissionList"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
           </el-input>
         </el-col>
 
         <!--添加权限按钮-->
         <el-col :span="4">
-          <el-button type="primary">添加权限</el-button>
+          <el-button type="primary" @click="showAddForm">添加权限</el-button>
         </el-col>
 
       </el-row>
@@ -59,6 +59,48 @@
     </el-card>
 
 
+
+
+    <!--添加权限对话框-->
+    <el-dialog title="添加权限" :visible.sync="addFormVisible" @close="closeAddForm" :close-on-click-modal="false">
+
+      <!--具体表单-->
+      <el-form ref="addForm" :rules="addPermissionRules" :model="addPermission" label-width="150px" size="mini">
+
+        <el-form-item label="权限名称" prop="name">
+          <el-input v-model="addPermission.name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="权限URL" prop="url">
+          <el-input v-model="addPermission.url"></el-input>
+        </el-form-item>
+
+        <el-form-item label="权限类型" prop="urlType">
+          <el-select v-model="addPermission.urlType" placeholder="请选择权限类型">
+            <el-option label="菜单权限" :value="1"></el-option>
+            <el-option label="接口权限" :value="-1"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="父菜单" prop="parentId">
+          <el-select v-model="addPermission.parentId"  placeholder="请选择父菜单">
+            <el-option label="一级菜单" :value="-1"></el-option>
+            <el-option v-for="p in parentMenus" :label="p.name" :value="p.id"></el-option>
+          </el-select>
+        </el-form-item>
+
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button  @click="closeAddForm">取 消</el-button>
+        <el-button type="primary" @click="submitAddForm">确 定</el-button>
+      </div>
+
+    </el-dialog>
+
+
+
+
   </div>
 
 </template>
@@ -72,7 +114,27 @@ export default {
       permissionList:[], //权限搜索结果
       currentPage:1,
       pageSize:5,
-      total:0
+      total:0,
+      //添加权限相关
+      addFormVisible:false,
+      addPermissionRules:{
+        name:[
+          {required:true,message:"名称不能为空",trigger:"blur"}
+        ],
+        urlType:[
+          {required:true,message:"请选择菜单类型",trigger:"change"}
+        ],
+        parentId:[
+          {required:true,message:"请选择父菜单",trigger:"change"}
+        ]
+      },
+      addPermission:{
+        name:'',
+        url:'',
+        urlType:1,
+        parentId:-1
+      },
+      parentMenus:[],
 
     };
   },
@@ -113,6 +175,25 @@ export default {
 
       this.currentPage = current;
       this.initPermissionList();
+    }
+    ,
+    search(){
+      this.currentPage = 1;
+      this.initPermissionList();
+    }
+    //新增权限相关
+    ,
+    showAddForm(){
+      this.addFormVisible=true;
+    }
+    ,
+    closeAddForm(){
+      this.addFormVisible=false;
+      this.$refs.addForm.resetFields();
+    }
+    ,
+    submitAddForm(){
+      this.addFormVisible=false;
     }
 
   },
