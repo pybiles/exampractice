@@ -185,15 +185,26 @@ export default {
     ,
     showAddForm(){
       this.addFormVisible=true;
+      this.refreshParentMenu();
     }
     ,
     closeAddForm(){
       this.addFormVisible=false;
-      this.$refs.addForm.resetFields();
+      this.$refs.addForm.resetFields(); //重置表单
     }
     ,
     submitAddForm(){
       this.addFormVisible=false;
+    }
+    ,
+    refreshParentMenu(){
+      this.$axios.get("/urlPermission/all")
+          .then(reponse=>{
+
+            let responseData = reponse.data;
+            this.parentMenus = responseData.data;
+
+          })
     }
 
   },
