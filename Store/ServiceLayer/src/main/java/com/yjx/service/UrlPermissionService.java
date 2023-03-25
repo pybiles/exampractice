@@ -20,4 +20,6 @@ public interface UrlPermissionService extends IService<UrlPermission> {
     List<PermissionMenu> getAllRootMenuByMap();
     Page<UrlPermission> pageSearch(Integer currentPage, Integer pageSize, String keyword);
     void deleteById(Long urlPermissionId);
+
+    List<PermissionMenu> allOfCurrentUser(String username);
 }

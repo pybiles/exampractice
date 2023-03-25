@@ -6,9 +6,11 @@ import com.yjx.behind.model.Result;
 import com.yjx.dal.entity.UrlPermission;
 import com.yjx.dal.model.PermissionMenu;
 import com.yjx.service.UrlPermissionService;
+import com.yjx.service.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +40,18 @@ public class UrlPermissionController {
         System.out.println("allRootMenuBySql耗时 " + (b - a) + "ms  allRootMenuByMap耗时 " + (c - b) + "ms");
 
         return Result.successResult(allRootMenuByMap);
+    }
+    @RequestMapping("allOfCurrentUser")
+    public Result<List<PermissionMenu>> allOfCurrentUser(HttpServletRequest request){
+
+        String username = JwtUtil.parseValue(request.getHeader("token"), "username");
+        if (username.equalsIgnoreCase("admin")){
+            return all();
+        }
+
+        List<PermissionMenu> permissionMenuList = urlPermissionService.allOfCurrentUser(username);
+
+        return Result.successResult(permissionMenuList);
     }
 
     @RequestMapping("pageSearch")

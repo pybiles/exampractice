@@ -16,7 +16,7 @@
 
       <!--左侧菜单-->
       <el-aside :width="isCollapse ? '64px' : '200px'">
-        <div class="toggle-button" @click="toggleClapse">||||</div>
+        <div class="toggle-button" @click="toggleClapse"><=></div>
         <el-menu
             background-color="#333744"
             text-color="#fff"
@@ -150,7 +150,8 @@ export default {
     }
     ,
     initMenuList(){
-      this.$axios.get("/urlPermission/all")
+      // this.$axios.get("/urlPermission/all")
+      this.$axios.get("/urlPermission/allOfCurrentUser")
           .then(response => {
             let responseData = response.data;
             this.menuList = responseData.data;
