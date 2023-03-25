@@ -339,7 +339,30 @@ export default {
         }
 
         console.log(this.updatePermission)
-        //todo 实现数据修改
+        //实现数据修改
+        this.$axios.post("/urlPermission/update",this.updatePermission)
+            .then(reponse => {
+              let responseData  = reponse.data;
+
+              if (responseData.code == 200){
+                this.$message({
+                  message:"修改成功成功",
+                  type:"success",
+                  duration:2000,
+                })
+
+                this.updateFormVisible=false;
+                this.initPermissionList();
+              }else {
+                this.$message({
+                  message:responseData.msg,
+                  type:"error",
+                  duration:2000,
+                })
+              }
+
+
+            })
 
         this.updateFormVisible=false;
       })

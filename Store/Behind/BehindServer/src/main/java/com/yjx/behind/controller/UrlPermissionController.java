@@ -7,10 +7,13 @@ import com.yjx.dal.entity.UrlPermission;
 import com.yjx.dal.model.PermissionMenu;
 import com.yjx.service.UrlPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,7 +61,22 @@ public class UrlPermissionController {
 
         return Result.successResult("ok");
     }
+    @PostMapping("update")
+    public Result<String> update(@RequestBody UrlPermission urlPermission){
 
+        //数据校验....
+        UrlPermission oriUrlPermission = urlPermissionService.getById(urlPermission.getId());
+        oriUrlPermission.setName(urlPermission.getName());
+        oriUrlPermission.setUrl(urlPermission.getUrl());
+        oriUrlPermission.setUrlType(urlPermission.getUrlType());
+        oriUrlPermission.setParentId(urlPermission.getParentId());
+        oriUrlPermission.setUpdateTime(new Date());
+
+        urlPermissionService.updateById(oriUrlPermission);
+
+        return Result.successResult("ok");
+
+    }
 
 }
 
