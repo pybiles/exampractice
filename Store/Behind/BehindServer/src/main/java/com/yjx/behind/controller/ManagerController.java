@@ -1,12 +1,15 @@
 package com.yjx.behind.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yjx.behind.model.Result;
 import com.yjx.dal.entity.Manager;
 import com.yjx.service.ManagerService;
 import com.yjx.service.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 /**
  * <p>
@@ -46,6 +49,49 @@ public class ManagerController {
         String username = JwtUtil.parseValueWithoutException(token, "username");
 
         return Result.successResult(username);
+    }
+    @RequestMapping("pageSearch")
+    public Result<Page<Manager>> pageSearch(Integer currentPage, Integer pageSize, String keyword){
+
+        Page<Manager> pageData = managerService.pageSearch(currentPage, pageSize, keyword);
+
+        return Result.successResult(pageData);
+    }
+
+    @PostMapping("add")
+    public Result<String> add(@RequestBody Manager manager){
+
+        manager.setLocked("0");
+        manager.setInsertTime(new Date());
+        manager.setUpdateTime(new Date());
+        managerService.save(manager);
+
+        return Result.successResult("ok");
+
+    }
+
+
+    @PostMapping("update")
+    public Result<String> update(@RequestBody Manager manager){
+
+        Manager oldManager = managerService.getById(manager.getId());
+        oldManager.setUserName(manager.getUserName());
+        oldManager.setUserPassword(manager.getUserPassword());
+        oldManager.setUpdateTime(new Date());
+
+        managerService.updateById(oldManager);
+
+        return Result.successResult("ok");
+    }
+
+
+
+    @DeleteMapping("delete/{id}")
+    public Result<String> delete(@PathVariable Long id){
+
+        managerService.deleteManager(id);
+
+        return Result.successResult("ok");
     }
 }
 

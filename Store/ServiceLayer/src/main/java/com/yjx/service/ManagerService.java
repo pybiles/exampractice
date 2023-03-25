@@ -1,5 +1,6 @@
 package com.yjx.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yjx.dal.entity.Manager;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ManagerService extends IService<Manager> {
     Manager checkLogin(String username, String password);
+    Page<Manager> pageSearch(Integer currentPage, Integer pageSize, String keyword);
+
+    void deleteManager(Long id);
+
 }
