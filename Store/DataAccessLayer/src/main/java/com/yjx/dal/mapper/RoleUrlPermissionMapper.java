@@ -14,5 +14,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface RoleUrlPermissionMapper extends BaseMapper<RoleUrlPermission> {
-
+    void batchInsert(Long roleId,Long[] permissionIds);
 }

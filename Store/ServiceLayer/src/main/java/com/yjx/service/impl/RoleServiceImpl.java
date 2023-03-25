@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * <p>
  *  服务实现类
@@ -62,4 +66,35 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         managerRoleMapper.delete(managerRoleQueryWrapper);
 
     }
+
+    @Override
+    public Set<Long> getRelationPermissionIds(Integer roleId) {
+
+        QueryWrapper<RoleUrlPermission> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("role_id",roleId);
+
+        List<RoleUrlPermission> roleUrlPermissionList = roleUrlPermissionMapper.selectList(queryWrapper);
+        Set<Long> relationPermissionIds = roleUrlPermissionList.stream().map(roleUrlPermission -> {
+            return roleUrlPermission.getUrlPermissionId();
+        }).collect(Collectors.toSet());
+
+        return relationPermissionIds;
+    }
+
+    @Override
+    @Transactional
+    public void refreshRelationPermissionIds(Long roleId, Long[] permissionIds) {
+
+        //删除已有的
+        QueryWrapper<RoleUrlPermission> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("role_id",roleId);
+        roleUrlPermissionMapper.delete(queryWrapper);
+
+        //写入新的
+        if (permissionIds!=null && permissionIds.length>0){
+            roleUrlPermissionMapper.batchInsert(roleId,permissionIds);
+        }
+
+    }
+
 }

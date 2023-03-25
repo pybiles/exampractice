@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
  * <p>
@@ -66,6 +67,21 @@ public class RoleController {
 
         return Result.successResult("ok");
     }
+    @PostMapping("getRelationPermissionIds")
+    public Result<Set<Long>> getRelationPermissionIds(Integer roleId){
 
+        Set<Long> relationPermissionIds = roleService.getRelationPermissionIds(roleId);
+
+        return Result.successResult(relationPermissionIds);
+    }
+
+    @PostMapping("refreshRelationPermissionIds")
+    // required = false  用来兼容所有权限都被移除掉的情况
+    public Result<String> refreshRelationPermissionIds(Long roleId, @RequestParam(name = "permissionIds[]",required = false) Long[] permissionIds){
+
+        roleService.refreshRelationPermissionIds(roleId,permissionIds);
+
+        return Result.successResult("ok");
+    }
 }
 

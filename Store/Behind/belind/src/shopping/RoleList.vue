@@ -397,18 +397,28 @@ export default {
     showRoleAuthorityForm(role){
       console.log(role)
 
+      this.roleAuthority.roleId = role.id;
+      this.roleAuthority.name = role.name;
+
+
+      //回显已有权限
+      this.$axios.postForm("/role/getRelationPermissionIds",{roleId:role.id})
+          .then(reponse => {
+            this.$refs.rolePermissionTree.setCheckedKeys(reponse.data.data);
+          })
+
 
       this.roleAuthorityFormVisible = true;  //显示异步的
-
-      // $refs 包含的是已经在页面上显示的元素
-      // 获取 this.$refs 内部是异步操作的
-      setTimeout(()=>{
-
-        console.log(this.$refs)
-        console.log(this.$refs.rolePermissionTree)
-
-        this.$refs.rolePermissionTree.setCheckedKeys(this.roleAuthority.permissionIds)
-      },50)
+      //
+      // // $refs 包含的是已经在页面上显示的元素
+      // // 获取 this.$refs 内部是异步操作的
+      // setTimeout(()=>{
+      //
+      //   console.log(this.$refs)
+      //   console.log(this.$refs.rolePermissionTree)
+      //
+      //   this.$refs.rolePermissionTree.setCheckedKeys(this.roleAuthority.permissionIds)
+      // },50)
 
     }
     ,
@@ -418,10 +428,40 @@ export default {
     ,
     submitRoleAuthorityForm(){
 
-      let checkIds = this.$refs.rolePermissionTree.getCheckedKeys();
-      console.log(checkIds)
+      let checkedIds = this.$refs.rolePermissionTree.getCheckedKeys();
+      console.log(checkedIds)
+      this.roleAuthority.permissionIds = checkedIds;
+
+      //刷新权限配置
+      this.$axios.postForm("/role/refreshRelationPermissionIds",this.roleAuthority)
+          .then(reponse=>{
+            let responseData = reponse.data;
+            if (responseData.code == 200){
+              this.$message({
+                message:"配置成功",
+                type:'success',
+                duration:2000
+              })
+            }else {
+              this.$message({
+                message:responseData.msg,
+                type:'error',
+                duration:2000
+              })
+            }
+          })
+
 
       this.roleAuthorityFormVisible = false;
+    }
+    ,
+    initPermissionMenu(){
+      this.$axios.get("/urlPermission/all")
+          .then(response => {
+
+            this.permissionMenu = response.data.data;
+
+          })
     }
 
 
@@ -429,6 +469,7 @@ export default {
   },
   created() {
     this.initRoleList();
+    this.initPermissionMenu();
   }
 
 }
