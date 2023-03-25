@@ -16,7 +16,7 @@
 
       <!--左侧菜单-->
       <el-aside :width="isCollapse ? '64px' : '200px'">
-        <div class="toggle-button" @click="toggleClapse"><=></div>
+        <div class="toggle-button" @click="toggleClapse">||||</div>
         <el-menu
             background-color="#333744"
             text-color="#fff"
@@ -56,7 +56,7 @@
   </el-container>
 </template>
 <script>
-import login from "@/shopping/Login.vue";
+import login from "@/bookshop/Login.vue";
 
 export default {
   name: "Home",
