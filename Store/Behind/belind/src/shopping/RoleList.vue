@@ -182,7 +182,7 @@ export default {
       roleAuthority:{
         roleId:0,
         name:'',
-        permissionIds:[]
+        permissionIds:[2,4]
       },
       permissionMenu:[
         {id:1,name:"a"},
@@ -398,7 +398,18 @@ export default {
       console.log(role)
 
 
-      this.roleAuthorityFormVisible = true;
+      this.roleAuthorityFormVisible = true;  //显示异步的
+
+      // $refs 包含的是已经在页面上显示的元素
+      // 获取 this.$refs 内部是异步操作的
+      setTimeout(()=>{
+
+        console.log(this.$refs)
+        console.log(this.$refs.rolePermissionTree)
+
+        this.$refs.rolePermissionTree.setCheckedKeys(this.roleAuthority.permissionIds)
+      },50)
+
     }
     ,
     closeRoleAuthorityForm(){
@@ -406,6 +417,10 @@ export default {
     }
     ,
     submitRoleAuthorityForm(){
+
+      let checkIds = this.$refs.rolePermissionTree.getCheckedKeys();
+      console.log(checkIds)
+
       this.roleAuthorityFormVisible = false;
     }
 
