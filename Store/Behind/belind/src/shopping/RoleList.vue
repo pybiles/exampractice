@@ -33,6 +33,7 @@
         <el-table-column label="角色code" prop="code"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
+            <el-button type="success" size="mini"  @click="showRoleAuthorityForm(scope.row)">配置权限</el-button>
             <el-button type="warning" size="mini" @click.prevent="showUpdateForm(scope.row)" >修改</el-button>
             <el-button type="danger" size="mini" @click.prevent="del(scope.row.id)" >删除</el-button>
           </template>
@@ -105,6 +106,33 @@
 
 
 
+    <!--配置权限-->
+    <el-dialog title="配置权限" :visible.sync="roleAuthorityFormVisible" @close="closeRoleAuthorityForm" :close-on-click-modal="false">
+      <el-form ref="roleAuthorityForm" :model="roleAuthority" label-width="150px" size="mini">
+        <el-form-item label="角色名称" prop="name">
+          <el-input v-model="roleAuthority.name" disabled></el-input>
+        </el-form-item>
+
+        <el-form-item label="权限选择">
+          <el-tree
+              :data="permissionMenu"
+              show-checkbox
+              :props="defaultProps"
+              default-expand-all
+              node-key="id"
+              ref="rolePermissionTree"
+              check-strictly
+          ></el-tree>
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button  @click="closeRoleAuthorityForm">取 消</el-button>
+        <el-button type="primary" @click="submitRoleAuthorityForm">确 定</el-button>
+      </div>
+    </el-dialog>
+
+
 
   </div>
 
@@ -148,7 +176,23 @@ export default {
         id:0,
         name:'',
         code:'',
-      }
+      },
+      //角色授权相关
+      roleAuthorityFormVisible:false,
+      roleAuthority:{
+        roleId:0,
+        name:'',
+        permissionIds:[]
+      },
+      permissionMenu:[
+        {id:1,name:"a"},
+        {id:2,name:"b"},
+        {id:3,name:"c",children:[{id:4,name:"c1"},{id:5,name:"c2"}]},
+      ],  //所有权限菜单
+      defaultProps:{
+        children: 'children',
+        label: 'name'
+      },
 
 
     };
@@ -348,6 +392,21 @@ export default {
         });
       })
 
+    }
+    ,
+    showRoleAuthorityForm(role){
+      console.log(role)
+
+
+      this.roleAuthorityFormVisible = true;
+    }
+    ,
+    closeRoleAuthorityForm(){
+      this.roleAuthorityFormVisible = false;
+    }
+    ,
+    submitRoleAuthorityForm(){
+      this.roleAuthorityFormVisible = false;
     }
 
 
