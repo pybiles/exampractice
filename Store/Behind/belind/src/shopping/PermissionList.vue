@@ -36,7 +36,8 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="warning" size="mini" >修改</el-button>
+            <!--scope.row代表当前行数据-->
+            <el-button type="warning" size="mini" @click.prevent="showUpdateForm(scope.row)" >修改</el-button>
             <el-button type="danger" size="mini" >删除</el-button>
           </template>
         </el-table-column>
@@ -99,6 +100,44 @@
     </el-dialog>
 
 
+    <!--修改权限对话框-->
+    <el-dialog title="修改权限" :visible.sync="updateFormVisible" @close="closeUpdateForm" :close-on-click-modal="false">
+
+      <!--具体表单-->
+      <el-form ref="updateForm" :rules="updatePermissionRules" :model="updatePermission" label-width="150px" size="mini">
+
+        <el-form-item label="权限名称" prop="name">
+          <el-input v-model="updatePermission.name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="权限URL" prop="url">
+          <el-input v-model="updatePermission.url"></el-input>
+        </el-form-item>
+
+        <el-form-item label="权限类型" prop="urlType">
+          <el-select v-model="updatePermission.urlType" placeholder="请选择权限类型">
+            <el-option label="菜单权限" :value="1"></el-option>
+            <el-option label="接口权限" :value="-1"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="父菜单" prop="parentId">
+          <el-select v-model="updatePermission.parentId"  placeholder="请选择父菜单">
+            <el-option label="一级菜单" :value="-1"></el-option>
+            <el-option v-for="p in parentMenus" :label="p.name" :value="p.id"></el-option>
+          </el-select>
+        </el-form-item>
+
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button  @click="closeUpdateForm">取 消</el-button>
+        <el-button type="primary" @click="submitupdateForm">确 定</el-button>
+      </div>
+
+    </el-dialog>
+
+
 
 
   </div>
@@ -135,6 +174,27 @@ export default {
         parentId:-1
       },
       parentMenus:[],
+      //修改权限相关
+      updateFormVisible:false,
+      updatePermissionRules:{
+        name:[
+          {required:true,message:"名称不能为空",trigger:"blur"}
+        ],
+        urlType:[
+          {required:true,message:"请选择菜单类型",trigger:"change"}
+        ],
+        parentId:[
+          {required:true,message:"请选择父菜单",trigger:"change"}
+        ]
+      },
+      updatePermission:{
+        id:0,
+        name:'',
+        url:'',
+        urlType:1,
+        parentId:-1
+      },
+
 
     };
   },
@@ -245,6 +305,47 @@ export default {
 
           })
     }
+    ,
+    //修改权限相关
+    showUpdateForm(urlPermission){
+      console.log(urlPermission)
+
+      this.updatePermission.id = urlPermission.id;
+      this.updatePermission.name = urlPermission.name;
+      this.updatePermission.url = urlPermission.url;
+      this.updatePermission.urlType = parseInt(urlPermission.urlType);
+      this.updatePermission.parentId = urlPermission.parentId;
+
+      this.refreshParentMenu();
+      this.updateFormVisible=true;
+    }
+    ,
+    closeUpdateForm(){
+      this.updateFormVisible=false;
+      this.$refs.updateForm.resetFields();
+    }
+    ,
+    submitupdateForm(){
+
+      this.$refs.updateForm.validate((isValid)=>{
+
+        if (!isValid){
+          this.$message({
+            message:"请正确填写表单" ,
+            type:'error',
+            duration:2000
+          })
+          return;
+        }
+
+        console.log(this.updatePermission)
+        //todo 实现数据修改
+
+        this.updateFormVisible=false;
+      })
+
+    }
+
 
   },
   created() {
