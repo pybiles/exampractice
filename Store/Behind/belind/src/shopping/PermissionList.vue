@@ -194,7 +194,46 @@ export default {
     }
     ,
     submitAddForm(){
-      this.addFormVisible=false;
+
+      console.log(this.addPermission)
+
+      this.$refs.addForm.validate((isValid)=>{
+
+        if (!isValid){
+          this.$message({
+            message:"请正确填写表单" ,
+            type:'error',
+            duration:2000
+          })
+          return;
+        }
+
+        //实现新增
+        this.$axios.postForm("/urlPermission/add",this.addPermission)
+            .then(response => {
+              let responseData = response.data;
+
+              if (responseData.code == 200){
+                this.$message({
+                  message:"新增成功",
+                  type:"success",
+                  duration:2000,
+                })
+
+                this.addFormVisible=false;
+                this.initPermissionList();
+              }else {
+                this.$message({
+                  message:responseData.msg,
+                  type:"error",
+                  duration:2000,
+                })
+              }
+
+            })
+
+      })
+
     }
     ,
     refreshParentMenu(){

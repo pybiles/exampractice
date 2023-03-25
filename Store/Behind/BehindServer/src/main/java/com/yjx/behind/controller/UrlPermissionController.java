@@ -48,6 +48,17 @@ public class UrlPermissionController {
 
         return Result.successResult(permissionPage);
     }
+    @RequestMapping("add")
+    public Result<String> add(UrlPermission urlPermission){
+
+        //数据校验.......
+
+        urlPermissionService.save(urlPermission);
+
+
+        return Result.successResult("ok");
+    }
+
 
 }
 
