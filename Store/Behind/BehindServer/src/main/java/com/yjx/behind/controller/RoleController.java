@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -83,5 +84,11 @@ public class RoleController {
 
         return Result.successResult("ok");
     }
+    @GetMapping("all")
+    public Result<List<Role>> all(){
+        List<Role> list = roleService.list();
+        return Result.successResult(list);
+    }
+
 }
 

@@ -184,7 +184,7 @@ export default {
       //配置角色相关
       configRoleVisible:false,
       configRole:{
-        id:0,
+        managerId:0,
         userName:'xxx',
         roleIds:[2]
       },
@@ -393,6 +393,16 @@ export default {
     showManagerConfigRoleForm(manager){
       console.log(manager)
 
+      this.configRole.managerId = manager.id;
+      this.configRole.userName = manager.userName;
+
+      //获取已有的角色
+      this.$axios.postForm("/manager/getRelationRoleIds",{managerId:manager.id})
+          .then(response => {
+            this.configRole.roleIds = response.data.data;
+          })
+
+
       this.configRoleVisible=true;
     }
     ,
@@ -401,7 +411,35 @@ export default {
     }
     ,
     submitConfigForm(){
+
+      this.$axios.postForm("/manager/refreshRelationRoleIds",this.configRole)
+          .then(response=>{
+
+            let responseData = response.data;
+            if (responseData.code == 200){
+              this.$message({
+                message:"配置成功",
+                type:'success',
+                duration:2000
+              })
+            }else {
+              this.$message({
+                message:responseData.msg,
+                type:'error',
+                duration:2000
+              })
+            }
+
+          })
+
       this.configRoleVisible=false;
+    }
+    ,
+    initRoleOptions(){
+      this.$axios.get("/role/all")
+          .then(response=>{
+            this.roleOptions = response.data.data;
+          })
     }
 
 
@@ -409,6 +447,7 @@ export default {
   },
   created() {
     this.initManagerList();
+    this.initRoleOptions();
   }
 
 }

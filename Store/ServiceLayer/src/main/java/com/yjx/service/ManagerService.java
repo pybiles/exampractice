@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yjx.dal.entity.Manager;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.Set;
+
 /**
  * <p>
  * 内部员工信息 服务类
@@ -17,5 +19,7 @@ public interface ManagerService extends IService<Manager> {
     Page<Manager> pageSearch(Integer currentPage, Integer pageSize, String keyword);
 
     void deleteManager(Long id);
+    Set<Long> getRelationRoleIds(Integer managerId);
 
+    void refreshRelationRoleIds(Long managerId, Long[] roleIds);
 }

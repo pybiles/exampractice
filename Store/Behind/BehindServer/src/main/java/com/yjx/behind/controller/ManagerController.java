@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
  * <p>
@@ -90,6 +91,18 @@ public class ManagerController {
     public Result<String> delete(@PathVariable Long id){
 
         managerService.deleteManager(id);
+
+        return Result.successResult("ok");
+    }
+    @PostMapping("getRelationRoleIds")
+    public Result<Set<Long>> getRelationRoleIds(Integer managerId){
+        Set<Long> relationRoleIds = managerService.getRelationRoleIds(managerId);
+        return Result.successResult(relationRoleIds);
+    }
+
+    @PostMapping("refreshRelationRoleIds")
+    public Result<String> refreshRelationRoleIds(Long managerId, @RequestParam(name = "roleIds[]",required = false) Long[] roleIds){
+        managerService.refreshRelationRoleIds(managerId,roleIds);
 
         return Result.successResult("ok");
     }

@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * <p>
  * 内部员工信息 服务实现类
@@ -68,8 +71,35 @@ public class ManagerServiceImpl extends ServiceImpl<ManagerMapper, Manager> impl
 
     }
 
+    @Override
+    public Set<Long> getRelationRoleIds(Integer managerId) {
+
+        QueryWrapper<ManagerRole> managerRoleQueryWrapper = new QueryWrapper<>();
+        managerRoleQueryWrapper.eq("manager_id",managerId);
+
+        Set<Long> roleIdSet = managerRoleMapper.selectList(managerRoleQueryWrapper)
+                .stream()
+                .map(managerRole -> {
+                    return managerRole.getRoleId();
+                })
+                .collect(Collectors.toSet());
+
+        return roleIdSet;
+    }
+
+    @Override
+    public void refreshRelationRoleIds(Long managerId, Long[] roleIds) {
+
+        QueryWrapper<ManagerRole> managerRoleQueryWrapper = new QueryWrapper<>();
+        managerRoleQueryWrapper.eq("manager_id",managerId);
+        managerRoleMapper.delete(managerRoleQueryWrapper);
+
+        if (roleIds!=null && roleIds.length>0){
+            managerRoleMapper.batchInsert(managerId,roleIds);
+        }
 
 
+    }
 
 }
 

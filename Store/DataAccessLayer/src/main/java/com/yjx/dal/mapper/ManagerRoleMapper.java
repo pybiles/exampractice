@@ -14,5 +14,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ManagerRoleMapper extends BaseMapper<ManagerRole> {
-
+    void batchInsert(Long managerId,Long[] roleIds);
 }
