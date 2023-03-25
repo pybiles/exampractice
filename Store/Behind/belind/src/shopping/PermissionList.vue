@@ -371,28 +371,47 @@ export default {
     ,
     del(id){
 
-      //执行删除
-      this.$axios.delete("/urlPermission/delete/"+id)
-          .then(reponse => {
-            let responseData  = reponse.data;
+      this.$confirm("此操作将永久删除该权限及其子权限,是否继续?","警告", {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then( ()=>{   //点击确定对应的操作
 
-            if (responseData.code == 200){
-              this.$message({
-                message:"删除成功",
-                type:"success",
-                duration:2000,
-              })
+        //执行删除
+        this.$axios.delete("/urlPermission/delete/"+id)
+            .then(reponse => {
+              let responseData  = reponse.data;
 
-              this.initPermissionList();
-            }else {
-              this.$message({
-                message:responseData.msg,
-                type:"error",
-                duration:2000,
-              })
-            }
+              if (responseData.code == 200){
+                this.$message({
+                  message:"删除成功",
+                  type:"success",
+                  duration:2000,
+                })
 
-          })
+                this.initPermissionList();
+              }else {
+                this.$message({
+                  message:responseData.msg,
+                  type:"error",
+                  duration:2000,
+                })
+              }
+
+            })
+
+
+      } ).catch( ()=>{  //点击取消对应的操作
+
+        this.$message({
+          message:"已取消删除",
+          type:"success",
+          duration:2000,
+        })
+
+      } )
+
+
 
     }
 
