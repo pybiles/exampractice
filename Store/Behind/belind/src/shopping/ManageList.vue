@@ -33,6 +33,7 @@
         <el-table-column label="用户密码">******</el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
+            <el-button type="success" size="mini"  @click="showManagerConfigRoleForm(scope.row)">配置角色</el-button>
             <el-button type="warning" size="mini" @click.prevent="showUpdateForm(scope.row)" >修改</el-button>
             <el-button type="danger" size="mini" @click.prevent="del(scope.row.id)" >删除</el-button>
           </template>
@@ -105,6 +106,37 @@
 
 
 
+    <!--管理员配置角色对话框-->
+    <el-dialog title="管理员配置角色" :visible.sync="configRoleVisible" @close="closeConfigForm" :close-on-click-modal="false">
+
+      <!--具体表单-->
+      <el-form ref="configRoleForm" :model="configRole" label-width="150px" size="mini">
+
+        <el-form-item label="管理员名称" prop="userName">
+          <el-input v-model="configRole.userName" disabled></el-input>
+        </el-form-item>
+
+        <el-form-item label="选择角色" prop="roleIds">
+          <el-select v-model="configRole.roleIds" multiple placeholder="请选择角色">
+            <el-option
+                v-for="item in roleOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button  @click="closeConfigForm">取 消</el-button>
+        <el-button type="primary" @click="submitConfigForm">确 定</el-button>
+      </div>
+
+    </el-dialog>
+
+
 
   </div>
 
@@ -148,7 +180,15 @@ export default {
         id:0,
         userName:'',
         userPassword:'',
-      }
+      },
+      //配置角色相关
+      configRoleVisible:false,
+      configRole:{
+        id:0,
+        userName:'xxx',
+        roleIds:[2]
+      },
+      roleOptions:[{id:1,name:"aaa"},{id:2,name:"bbb"}],
 
 
     };
@@ -348,6 +388,20 @@ export default {
         });
       })
 
+    }
+    ,
+    showManagerConfigRoleForm(manager){
+      console.log(manager)
+
+      this.configRoleVisible=true;
+    }
+    ,
+    closeConfigForm(){
+      this.configRoleVisible=false;
+    }
+    ,
+    submitConfigForm(){
+      this.configRoleVisible=false;
     }
 
 
