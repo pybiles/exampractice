@@ -3,6 +3,7 @@ package com.yjx.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yjx.dal.mapper.RoleUrlPermissionMapper;
 import com.yjx.dal.model.PermissionMenu;
 import com.yjx.dal.entity.UrlPermission;
 import com.yjx.dal.mapper.UrlPermissionMapper;
@@ -28,6 +29,8 @@ import java.util.stream.Collectors;
 public class UrlPermissionServiceImpl extends ServiceImpl<UrlPermissionMapper, UrlPermission> implements UrlPermissionService {
     @Autowired
     UrlPermissionMapper urlPermissionMapper;
+    @Autowired
+    RoleUrlPermissionMapper roleUrlPermissionMapper;
 
     @Override
     public List<PermissionMenu> getAllRootMenuBySql() {
@@ -86,6 +89,11 @@ public class UrlPermissionServiceImpl extends ServiceImpl<UrlPermissionMapper, U
         Page<UrlPermission> permissionPage = urlPermissionMapper.selectPage(page, queryWrapper);
 
         return permissionPage;
+
+    }
+
+    @Override
+    public void deleteById(Long urlPermissionId) {
 
     }
 }

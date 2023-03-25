@@ -38,7 +38,7 @@
           <template slot-scope="scope">
             <!--scope.row代表当前行数据-->
             <el-button type="warning" size="mini" @click.prevent="showUpdateForm(scope.row)" >修改</el-button>
-            <el-button type="danger" size="mini" >删除</el-button>
+            <el-button type="danger" size="mini" @click.prevent="del(scope.row.id)" >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -346,7 +346,7 @@ export default {
 
               if (responseData.code == 200){
                 this.$message({
-                  message:"修改成功成功",
+                  message:"修改成功",
                   type:"success",
                   duration:2000,
                 })
@@ -366,6 +366,33 @@ export default {
 
         this.updateFormVisible=false;
       })
+
+    }
+    ,
+    del(id){
+
+      //执行删除
+      this.$axios.delete("/urlPermission/delete/"+id)
+          .then(reponse => {
+            let responseData  = reponse.data;
+
+            if (responseData.code == 200){
+              this.$message({
+                message:"删除成功",
+                type:"success",
+                duration:2000,
+              })
+
+              this.initPermissionList();
+            }else {
+              this.$message({
+                message:responseData.msg,
+                type:"error",
+                duration:2000,
+              })
+            }
+
+          })
 
     }
 

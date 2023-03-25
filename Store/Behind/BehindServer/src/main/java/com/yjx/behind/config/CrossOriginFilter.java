@@ -13,13 +13,15 @@ public class CrossOriginFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         //在响应头里加上允许跨域访问
-        HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
 
         //允许自定义请求头
-        httpServletResponse.addHeader("Access-Control-Allow-Headers","*");
+        httpServletResponse.addHeader("Access-Control-Allow-Headers", "*");
+        //允许非get或post的请求方式
+        httpServletResponse.addHeader("Access-Control-Allow-Methods", "*");
 
         //放行
-        chain.doFilter(request,response);
+        chain.doFilter(request, response);
     }
 }
